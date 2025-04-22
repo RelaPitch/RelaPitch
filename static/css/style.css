@@ -1,0 +1,588 @@
+/* Global Styles */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--primary-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 4rem 0;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Features */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--primary-color);
+}
+
+.btn.large {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+}
+
+.btn.skip {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.btn.skip:hover {
+    background-color: #e0e0e0;
+}
+
+/* Quiz Styles */
+.quiz-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.quiz-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.quiz-mode {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.quiz-mode .btn {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    min-width: 150px;
+}
+
+.quiz-mode .btn.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.quiz-section {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.quiz-section.active {
+    display: block;
+}
+
+.reference-note, .guess-note {
+    background-color: var(--background-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.reference-note h3, .guess-note h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+#referenceNoteDisplay, #referenceNoteDisplaySing, #targetNoteDisplay {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.note-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.note-btn {
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.note-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+#tunerDisplay {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#pitch, #note {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+}
+
+#tunerCanvas {
+    width: 100%;
+    max-width: 500px;
+    height: 200px;
+    margin-top: 1rem;
+    background-color: white;
+    border-radius: 5px;
+}
+
+#submitRecording {
+    margin-top: 1rem;
+}
+
+#submitRecording:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Lesson Styles */
+.lesson-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.lesson-content {
+    margin: 2rem 0;
+}
+
+.lesson-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    margin-top: 4rem;
+}
+
+.note-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.note-select-btn {
+    padding: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.note-select-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.note-select-btn.active {
+    background-color: var(--accent-color);
+}
+
+.feedback-container {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.feedback {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.feedback.correct {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.feedback.incorrect {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.feedback h3 {
+    margin-bottom: 0.5rem;
+}
+
+.feedback-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+}
+
+.feedback-popup.correct {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.feedback-popup.incorrect {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.feedback-content {
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-content h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Keyboard Styles */
+.keyboard-container {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.keyboard-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+#piano {
+    position: relative;
+    display: flex;
+    height: 200px;
+}
+
+.white {
+    width: 60px;
+    height: 200px;
+    background: white;
+    border: 1px solid #333;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.black {
+    width: 40px;
+    height: 120px;
+    background: black;
+    position: absolute;
+    z-index: 2;
+    margin-left: -20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.note-name {
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.black .note-name {
+    color: white;
+    font-size: 0.9rem;
+    line-height: 1.1;
+}
+
+.white:active,
+.black:active {
+    background: #eee;
+}
+
+.black:active {
+    background: #444;
+}
+
+.white.active .note-name,
+.black.active .note-name {
+    opacity: 1;
+}
+
+.keyboard-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.keyboard-controls button {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.keyboard-controls button:hover {
+    background: #0056b3;
+}
+
+.keyboard-controls button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Lesson Content Styles */
+.lesson-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-content h2 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.lesson-content p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.lesson-content ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.lesson-content li {
+    margin-bottom: 0.5rem;
+}
+
+.lesson-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.lesson-navigation a {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.lesson-navigation a:hover {
+    background: #0056b3;
+}
+
+.lesson-navigation a:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.start-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.start-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.start-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.start-content ul {
+    text-align: left;
+    margin: 1.5rem auto;
+    max-width: 400px;
+}
+
+.start-content li {
+    margin-bottom: 0.5rem;
+}
+
+.start-content .btn {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+}
+
+.white.active {
+    background-color: #e0e0e0;
+    transform: translateY(2px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.black.active {
+    background-color: #333;
+    transform: translateY(2px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.white, .black {
+    transition: all 0.1s ease;
+}
+
+.score-display {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.score-display h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.score-display #score {
+    font-weight: bold;
+    font-size: 1.4rem;
+} 

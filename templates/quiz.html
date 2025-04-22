@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Pitch Recognition Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <h1>Pitch Recognition Quiz</h1>
+    
+    <div id="startPage" class="quiz-section active">
+        <div class="start-content">
+            <h2>Welcome to the Pitch Recognition Quiz!</h2>
+            <p>This quiz will help you improve your pitch recognition skills in two modes:</p>
+            <ul>
+                <li><strong>Listen Mode:</strong> Listen to notes and identify them</li>
+                <li><strong>Sing Mode:</strong> Sing the target note after hearing the reference note</li>
+            </ul>
+            <p>Are you ready to begin?</p>
+            <button id="startQuiz" class="btn large">Start Quiz</button>
+        </div>
+    </div>
+    
+    <div class="quiz-controls" style="display: none;">
+        <div class="score-display">
+            <h3>Score: <span id="score">0</span></h3>
+        </div>
+
+        <div class="quiz-mode">
+            <button id="listenMode" class="btn active">Listen Mode</button>
+            <button id="singMode" class="btn">Sing Mode</button>
+        </div>
+
+        <div id="listenSection" class="quiz-section">
+            <div class="reference-note">
+                <h3>Reference Note</h3>
+                <div class="note-selection">
+                    <button class="note-select-btn" data-note="C4">C</button>
+                    <button class="note-select-btn" data-note="D4">D</button>
+                    <button class="note-select-btn" data-note="E4">E</button>
+                    <button class="note-select-btn" data-note="F4">F</button>
+                    <button class="note-select-btn" data-note="G4">G</button>
+                    <button class="note-select-btn" data-note="A4">A</button>
+                    <button class="note-select-btn" data-note="B4">B</button>
+                </div>
+                <button id="playReference" class="btn large">Play Reference Note</button>
+                <div id="referenceNoteDisplay"></div>
+            </div>
+
+            <div class="guess-note">
+                <h3>Guess Note</h3>
+                <button id="playGuess" class="btn large">Play Guess Note</button>
+                <div class="note-options">
+                    <button class="note-btn" data-note="C">C</button>
+                    <button class="note-btn" data-note="D">D</button>
+                    <button class="note-btn" data-note="E">E</button>
+                    <button class="note-btn" data-note="F">F</button>
+                    <button class="note-btn" data-note="G">G</button>
+                    <button class="note-btn" data-note="A">A</button>
+                    <button class="note-btn" data-note="B">B</button>
+                </div>
+                <button id="skipListen" class="btn skip">Skip Question</button>
+            </div>
+        </div>
+
+        <div id="singSection" class="quiz-section">
+            <div class="reference-note">
+                <h3>Reference Note</h3>
+                <div class="note-selection">
+                    <button class="note-select-btn" data-note="C4">C</button>
+                    <button class="note-select-btn" data-note="D4">D</button>
+                    <button class="note-select-btn" data-note="E4">E</button>
+                    <button class="note-select-btn" data-note="F4">F</button>
+                    <button class="note-select-btn" data-note="G4">G</button>
+                    <button class="note-select-btn" data-note="A4">A</button>
+                    <button class="note-select-btn" data-note="B4">B</button>
+                </div>
+                <button id="playReferenceSing" class="btn large">Play Reference Note</button>
+                <div id="referenceNoteDisplaySing"></div>
+            </div>
+
+            <div class="guess-note">
+                <h3>Target Note: <span id="targetNoteDisplay"></span></h3>
+                <button id="startTuner" class="btn large">Start Recording</button>
+                <div id="tunerDisplay">
+                    <div id="pitch"></div>
+                    <div id="note"></div>
+                    <canvas id="tunerCanvas"></canvas>
+                </div>
+                <button id="submitRecording" class="btn large" disabled>Submit Recording</button>
+                <button id="skipSing" class="btn skip">Skip Question</button>
+            </div>
+        </div>
+
+        <div id="feedbackDisplay" class="feedback-container"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<script src="{{ url_for('static', filename='js/tuner.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %} 

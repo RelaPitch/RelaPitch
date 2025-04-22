@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Realistic Piano</title>
+  <style>
+    body {
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: sans-serif;
+      padding: 40px;
+    }
+
+    #startButton {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #222;
+      color: white;
+      cursor: pointer;
+    }
+
+    #startButton:hover {
+      background-color: #444;
+    }
+
+    #piano {
+      position: relative;
+      display: flex;
+    }
+
+    .white {
+      width: 60px;
+      height: 200px;
+      background: white;
+      border: 1px solid #333;
+      position: relative;
+      z-index: 1;
+    }
+
+    .black {
+      width: 40px;
+      height: 120px;
+      background: black;
+      position: absolute;
+      z-index: 2;
+      margin-left: -20px;
+    }
+
+    .white:active {
+      background: #eee;
+    }
+
+    .black:active {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <button id="startButton">Click to Start Realistic Piano 🎹</button>
+
+  <div id="piano" style="display:none;">
+    <!-- White keys -->
+    <div class="white" data-note="C4"></div>
+    <div class="white" data-note="D4"></div>
+    <div class="white" data-note="E4"></div>
+    <div class="white" data-note="F4"></div>
+    <div class="white" data-note="G4"></div>
+    <div class="white" data-note="A4"></div>
+    <div class="white" data-note="B4"></div>
+    <div class="white" data-note="C5"></div>
+
+    <!-- Black keys -->
+    <div class="black" data-note="C#4" style="left: 45px;"></div>
+    <div class="black" data-note="D#4" style="left: 105px;"></div>
+    <div class="black" data-note="F#4" style="left: 225px;"></div>
+    <div class="black" data-note="G#4" style="left: 285px;"></div>
+    <div class="black" data-note="A#4" style="left: 345px;"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+  <script>
+    let sampler;
+    const noteTimers = {}; // Track when each note was played
+  
+    const startButton = document.getElementById('startButton');
+    const piano = document.getElementById('piano');
+  
+    startButton.addEventListener('click', async () => {
+      await Tone.start();
+  
+      sampler = new Tone.Sampler({
+        urls: {
+          "C4": "C4.mp3",
+          "D#4": "Ds4.mp3",
+          "F#4": "Fs4.mp3",
+          "A4": "A4.mp3",
+        },
+        baseUrl: "https://tonejs.github.io/audio/salamander/",
+        onload: () => {
+          startButton.style.display = 'none';
+          piano.style.display = 'flex';
+        }
+      }).toDestination();
+    });
+  
+    document.querySelectorAll('.white, .black').forEach(key => {
+      const note = key.dataset.note;
+  
+      const triggerReleaseWithDelay = () => {
+        if (!noteTimers[note]) return;
+  
+        const now = Date.now();
+        const elapsed = now - noteTimers[note];
+  
+        const delay = Math.max(600 - elapsed, 0);
+        setTimeout(() => {
+          sampler.triggerRelease(note);
+          delete noteTimers[note];
+        }, delay);
+      };
+  
+      key.addEventListener('mousedown', () => {
+        if (sampler) {
+          noteTimers[note] = Date.now();
+          sampler.triggerAttack(note);
+        }
+      });
+  
+      key.addEventListener('mouseup', triggerReleaseWithDelay);
+      key.addEventListener('mouseleave', triggerReleaseWithDelay);
+  
+      // Touch support
+      key.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (sampler) {
+          noteTimers[note] = Date.now();
+          sampler.triggerAttack(note);
+        }
+      });
+  
+      key.addEventListener('touchend', triggerReleaseWithDelay);
+    });
+  </script>
+  
+  
+  
+</body>
+</html>

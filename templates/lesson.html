@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }}{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+    <h1>{{ lesson.title }}</h1>
+    
+    <div class="lesson-content">
+        {{ lesson.content | safe }}
+    </div>
+
+    {% if lesson.keyboard %}
+    <div class="keyboard-container">
+        <h2 class="keyboard-header">Interactive Keyboard</h2>
+        <div id="piano">
+            <!-- White keys -->
+            <div class="white" data-note="C4">
+                <span class="note-name">C</span>
+            </div>
+            <div class="white" data-note="D4">
+                <span class="note-name">D</span>
+            </div>
+            <div class="white" data-note="E4">
+                <span class="note-name">E</span>
+            </div>
+            <div class="white" data-note="F4">
+                <span class="note-name">F</span>
+            </div>
+            <div class="white" data-note="G4">
+                <span class="note-name">G</span>
+            </div>
+            <div class="white" data-note="A4">
+                <span class="note-name">A</span>
+            </div>
+            <div class="white" data-note="B4">
+                <span class="note-name">B</span>
+            </div>
+            <div class="white" data-note="C5">
+                <span class="note-name">C</span>
+            </div>
+
+            <!-- Black keys -->
+            <div class="black" data-note="C#4" style="left: 45px;">
+                <span class="note-name">C#<br>Db</span>
+            </div>
+            <div class="black" data-note="D#4" style="left: 105px;">
+                <span class="note-name">D#<br>Eb</span>
+            </div>
+            <div class="black" data-note="F#4" style="left: 225px;">
+                <span class="note-name">F#<br>Gb</span>
+            </div>
+            <div class="black" data-note="G#4" style="left: 285px;">
+                <span class="note-name">G#<br>Ab</span>
+            </div>
+            <div class="black" data-note="A#4" style="left: 345px;">
+                <span class="note-name">A#<br>Bb</span>
+            </div>
+        </div>
+        <div class="keyboard-controls">
+            <button id="playScale" class="btn">Play Scale</button>
+            <button id="playRandomNote" class="btn">Play Random Note</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="lesson-navigation">
+        {% if lesson_id > 1 %}
+        <a href="{{ url_for('lesson', lesson_id=lesson_id-1) }}" class="btn">Previous Lesson</a>
+        {% endif %}
+        
+        {% if lesson_id < 3 %}
+        <a href="{{ url_for('lesson', lesson_id=lesson_id+1) }}" class="btn">Next Lesson</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<script src="{{ url_for('static', filename='js/lesson.js') }}"></script>
+{% endblock %} 
