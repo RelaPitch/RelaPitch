@@ -53,6 +53,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Show feedback
+    function showFeedback(isCorrect, message) {
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.className = `alert ${isCorrect ? 'alert-success' : 'alert-danger'} mt-3`;
+        feedbackDiv.textContent = message;
+        
+        const container = document.querySelector('.card-body');
+        container.appendChild(feedbackDiv);
+        
+        // Remove feedback after 3 seconds
+        setTimeout(() => {
+            feedbackDiv.remove();
+        }, 3000);
+    }
+
     // Submit answer to server
     async function submitAnswer(answer) {
         try {
@@ -74,6 +89,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const result = await response.json();
             console.log("Answer submitted successfully:", result);
+            
+            // Show feedback
+            if (result.is_correct) {
+                showFeedback(true, "Correct! Well done!");
+            } else {
+                showFeedback(false, `Incorrect. The correct answer was ${result.correct_answer}`);
+            }
+            
             return result;
         } catch (error) {
             console.error('Error submitting answer:', error);
@@ -115,15 +138,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             const selectedNote = button.dataset.note;
             console.log("Selected note:", selectedNote);
             
-            // Visual feedback
-            button.classList.add('btn-success');
-            button.classList.remove('btn-outline-primary');
+            // Submit answer first
+            const result = await submitAnswer(selectedNote);
+            
+            // Visual feedback based on correctness
+            if (result.is_correct) {
+                button.classList.add('btn-success');
+                button.classList.remove('btn-outline-primary');
+            } else {
+                button.classList.add('btn-danger');
+                button.classList.remove('btn-outline-primary');
+                
+                // Find and highlight the correct button
+                noteButtons.forEach(btn => {
+                    if (btn.dataset.note === result.correct_answer) {
+                        btn.classList.add('btn-success');
+                        btn.classList.remove('btn-outline-primary');
+                    }
+                });
+            }
             
             // Disable all buttons
             noteButtons.forEach(btn => btn.disabled = true);
-            
-            // Submit answer
-            await submitAnswer(selectedNote);
         });
     });
     
@@ -177,7 +213,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Submitting recorded note:", currentNote);
             
             // Submit answer
-            await submitAnswer(currentNote);
+            const result = await submitAnswer(currentNote);
+            
+            // Visual feedback for sing mode
+            const noteDisplay = document.getElementById('note');
+            if (result.is_correct) {
+                noteDisplay.style.color = 'green';
+            } else {
+                noteDisplay.style.color = 'red';
+                // Show the correct note
+                const correctNoteDiv = document.createElement('div');
+                correctNoteDiv.className = 'alert alert-info mt-2';
+                correctNoteDiv.textContent = `Correct note: ${result.correct_answer}`;
+                noteDisplay.parentNode.appendChild(correctNoteDiv);
+            }
             
             // Stop the tuner
             if (tuner) {

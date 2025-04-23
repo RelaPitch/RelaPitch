@@ -141,15 +141,34 @@ def submit_quiz_answer():
                 'quiz_score': 0
             }
         
-        # Store the answer
+        # Get the question
+        question = QUIZ_QUESTIONS[int(question_id)]
+        
+        # Check if the answer is correct
+        is_correct = False
+        if question['type'] == 'listen':
+            # For listen mode, check if the answer matches the target note
+            is_correct = answer == question['target_note'][0]
+        else:
+            # For sing mode, check if the answer matches the target note
+            # Remove any octave number from the answer (e.g., "C4" -> "C")
+            answer_note = answer[0] if answer else ''
+            is_correct = answer_note == question['target_note'][0]
+        
+        # Store the answer with correctness
         session['user_data']['quiz_answers'][str(question_id)] = {
             'answer': answer,
-            'timestamp': datetime.now().isoformat()
+            'timestamp': datetime.now().isoformat(),
+            'is_correct': is_correct
         }
         session.modified = True
         
-        print(f"Stored answer for question {question_id}: {answer}")
-        return jsonify({'success': True})
+        print(f"Stored answer for question {question_id}: {answer} (Correct: {is_correct})")
+        return jsonify({
+            'success': True,
+            'is_correct': is_correct,
+            'correct_answer': question['target_note'][0]
+        })
     except Exception as e:
         print(f"Error submitting answer: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -161,12 +180,10 @@ def quiz_results():
     correct_answers = 0
     
     for question_id, answer_data in answers.items():
-        question = QUIZ_QUESTIONS[int(question_id)]
-        if question['type'] == 'listen':
-            if answer_data['answer'] == question['target_note'][0]:
-                correct_answers += 1
+        if answer_data.get('is_correct', False):
+            correct_answers += 1
     
-    total_questions = len([q for q in QUIZ_QUESTIONS.values() if q['type'] == 'listen'])
+    total_questions = len(QUIZ_QUESTIONS)
     score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
     
     session['user_data']['quiz_score'] = score
