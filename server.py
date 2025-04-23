@@ -1,7 +1,10 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request, session
 import os
+from datetime import datetime
+import json
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-here'  # Required for session
 
 # Lesson content (this would typically come from a database)
 LESSONS = {
@@ -58,19 +61,121 @@ LESSONS = {
     }
 }
 
+# Quiz questions
+QUIZ_QUESTIONS = {
+    1: {
+        "type": "listen",
+        "reference_note": "C4",
+        "target_note": "E4",
+        "options": ["C", "D", "E", "F", "G", "A", "B"]
+    },
+    2: {
+        "type": "listen",
+        "reference_note": "G4",
+        "target_note": "B4",
+        "options": ["C", "D", "E", "F", "G", "A", "B"]
+    },
+    3: {
+        "type": "sing",
+        "reference_note": "C4",
+        "target_note": "G4",
+        "options": []  # Empty list for sing mode
+    }
+}
+
+# Initialize user data storage
+def init_user_data():
+    if 'user_data' not in session:
+        session['user_data'] = {
+            'start_time': datetime.now().isoformat(),
+            'lesson_visits': {},
+            'quiz_answers': {},
+            'quiz_score': 0
+        }
+
 @app.route('/')
 def home():
+    init_user_data()
     return render_template('home.html')
 
 @app.route('/lesson/<int:lesson_id>')
 def lesson(lesson_id):
+    init_user_data()
     if lesson_id in LESSONS:
+        # Record lesson visit
+        session['user_data']['lesson_visits'][str(lesson_id)] = datetime.now().isoformat()
+        session.modified = True
         return render_template('lesson.html', lesson=LESSONS[lesson_id], lesson_id=lesson_id)
     return "Lesson not found", 404
 
-@app.route('/quiz')
-def quiz():
-    return render_template('quiz.html')
+@app.route('/quiz/<int:question_id>')
+def quiz(question_id):
+    init_user_data()
+    if question_id in QUIZ_QUESTIONS:
+        question = QUIZ_QUESTIONS[question_id]
+        # Ensure options is always a list
+        if 'options' not in question:
+            question['options'] = []
+        return render_template('quiz.html', 
+                             question=question,
+                             question_id=question_id,
+                             total_questions=len(QUIZ_QUESTIONS))
+    return "Question not found", 404
+
+@app.route('/quiz/submit', methods=['POST'])
+def submit_quiz_answer():
+    try:
+        data = request.get_json()
+        question_id = data.get('question_id')
+        answer = data.get('answer')
+        
+        if not question_id or not answer:
+            return jsonify({'success': False, 'error': 'Missing question_id or answer'}), 400
+        
+        # Initialize user data if not exists
+        if 'user_data' not in session:
+            session['user_data'] = {
+                'start_time': datetime.now().isoformat(),
+                'lesson_visits': {},
+                'quiz_answers': {},
+                'quiz_score': 0
+            }
+        
+        # Store the answer
+        session['user_data']['quiz_answers'][str(question_id)] = {
+            'answer': answer,
+            'timestamp': datetime.now().isoformat()
+        }
+        session.modified = True
+        
+        print(f"Stored answer for question {question_id}: {answer}")
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error submitting answer: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/quiz/results')
+def quiz_results():
+    init_user_data()
+    answers = session['user_data']['quiz_answers']
+    correct_answers = 0
+    
+    for question_id, answer_data in answers.items():
+        question = QUIZ_QUESTIONS[int(question_id)]
+        if question['type'] == 'listen':
+            if answer_data['answer'] == question['target_note'][0]:
+                correct_answers += 1
+    
+    total_questions = len([q for q in QUIZ_QUESTIONS.values() if q['type'] == 'listen'])
+    score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+    
+    session['user_data']['quiz_score'] = score
+    session.modified = True
+    
+    return render_template('quiz_results.html', 
+                         score=score,
+                         total_questions=total_questions,
+                         correct_answers=correct_answers)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True) 

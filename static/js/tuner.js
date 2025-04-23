@@ -11,17 +11,27 @@ class Tuner {
         if (this.isRunning) return;
 
         try {
+            // Request microphone access first
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
+            
+            // Create audio context after getting permission
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 2048;
 
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             this.mediaStream = stream;
             const source = this.audioContext.createMediaStreamSource(stream);
             source.connect(this.analyser);
 
             this.isRunning = true;
             this.updatePitch();
+            console.log("Tuner started successfully");
         } catch (error) {
             console.error('Error starting tuner:', error);
             throw error;
@@ -38,6 +48,7 @@ class Tuner {
             this.audioContext.close();
         }
         this.isRunning = false;
+        console.log("Tuner stopped");
     }
 
     updatePitch() {

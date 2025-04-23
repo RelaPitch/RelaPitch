@@ -1,98 +1,84 @@
 {% extends "base.html" %}
 
-{% block title %}Pitch Recognition Quiz{% endblock %}
+{% block title %}Question {{ question_id }}{% endblock %}
 
 {% block content %}
-<div class="quiz-container">
-    <h1>Pitch Recognition Quiz</h1>
-    
-    <div id="startPage" class="quiz-section active">
-        <div class="start-content">
-            <h2>Welcome to the Pitch Recognition Quiz!</h2>
-            <p>This quiz will help you improve your pitch recognition skills in two modes:</p>
-            <ul>
-                <li><strong>Listen Mode:</strong> Listen to notes and identify them</li>
-                <li><strong>Sing Mode:</strong> Sing the target note after hearing the reference note</li>
-            </ul>
-            <p>Are you ready to begin?</p>
-            <button id="startQuiz" class="btn large">Start Quiz</button>
-        </div>
-    </div>
-    
-    <div class="quiz-controls" style="display: none;">
-        <div class="score-display">
-            <h3>Score: <span id="score">0</span></h3>
-        </div>
-
-        <div class="quiz-mode">
-            <button id="listenMode" class="btn active">Listen Mode</button>
-            <button id="singMode" class="btn">Sing Mode</button>
-        </div>
-
-        <div id="listenSection" class="quiz-section">
-            <div class="reference-note">
-                <h3>Reference Note</h3>
-                <div class="note-selection">
-                    <button class="note-select-btn" data-note="C4">C</button>
-                    <button class="note-select-btn" data-note="D4">D</button>
-                    <button class="note-select-btn" data-note="E4">E</button>
-                    <button class="note-select-btn" data-note="F4">F</button>
-                    <button class="note-select-btn" data-note="G4">G</button>
-                    <button class="note-select-btn" data-note="A4">A</button>
-                    <button class="note-select-btn" data-note="B4">B</button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">Question {{ question_id }} of {{ total_questions }}</h2>
                 </div>
-                <button id="playReference" class="btn large">Play Reference Note</button>
-                <div id="referenceNoteDisplay"></div>
-            </div>
+                <div class="card-body">
+                    {% if question.type == 'listen' %}
+                    <div class="listen-section">
+                        <h3>Listen Mode</h3>
+                        <div class="reference-note mb-4">
+                            <h4>Reference Note</h4>
+                            <button id="playReference" class="btn btn-primary">Play Reference Note</button>
+                            <div id="referenceNoteDisplay" class="mt-2"></div>
+                        </div>
 
-            <div class="guess-note">
-                <h3>Guess Note</h3>
-                <button id="playGuess" class="btn large">Play Guess Note</button>
-                <div class="note-options">
-                    <button class="note-btn" data-note="C">C</button>
-                    <button class="note-btn" data-note="D">D</button>
-                    <button class="note-btn" data-note="E">E</button>
-                    <button class="note-btn" data-note="F">F</button>
-                    <button class="note-btn" data-note="G">G</button>
-                    <button class="note-btn" data-note="A">A</button>
-                    <button class="note-btn" data-note="B">B</button>
-                </div>
-                <button id="skipListen" class="btn skip">Skip Question</button>
-            </div>
-        </div>
+                        <div class="target-note mb-4">
+                            <h4>Target Note</h4>
+                            <button id="playTarget" class="btn btn-primary">Play Target Note</button>
+                            <div class="note-options mt-3">
+                                {% for note in question.options %}
+                                <button class="btn btn-outline-primary note-btn" data-note="{{ note }}">{{ note }}</button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="sing-section">
+                        <h3>Sing Mode</h3>
+                        <div class="reference-note mb-4">
+                            <h4>Reference Note</h4>
+                            <button id="playReferenceSing" class="btn btn-primary">Play Reference Note</button>
+                            <div id="referenceNoteDisplaySing" class="mt-2"></div>
+                        </div>
 
-        <div id="singSection" class="quiz-section">
-            <div class="reference-note">
-                <h3>Reference Note</h3>
-                <div class="note-selection">
-                    <button class="note-select-btn" data-note="C4">C</button>
-                    <button class="note-select-btn" data-note="D4">D</button>
-                    <button class="note-select-btn" data-note="E4">E</button>
-                    <button class="note-select-btn" data-note="F4">F</button>
-                    <button class="note-select-btn" data-note="G4">G</button>
-                    <button class="note-select-btn" data-note="A4">A</button>
-                    <button class="note-select-btn" data-note="B4">B</button>
-                </div>
-                <button id="playReferenceSing" class="btn large">Play Reference Note</button>
-                <div id="referenceNoteDisplaySing"></div>
-            </div>
+                        <div class="target-note mb-4">
+                            <h4>Target Note: {{ question.target_note[0] }}</h4>
+                            <button id="startTuner" class="btn btn-primary">Start Recording</button>
+                            <div id="tunerDisplay" class="mt-3">
+                                <div id="pitch"></div>
+                                <div id="note"></div>
+                                <canvas id="tunerCanvas"></canvas>
+                            </div>
+                            <button id="submitRecording" class="btn btn-success mt-3" disabled>Submit Recording</button>
+                        </div>
+                    </div>
+                    {% endif %}
 
-            <div class="guess-note">
-                <h3>Target Note: <span id="targetNoteDisplay"></span></h3>
-                <button id="startTuner" class="btn large">Start Recording</button>
-                <div id="tunerDisplay">
-                    <div id="pitch"></div>
-                    <div id="note"></div>
-                    <canvas id="tunerCanvas"></canvas>
+                    <div class="navigation-buttons text-center mt-4">
+                        {% if question_id > 1 %}
+                        <a href="{{ url_for('quiz', question_id=question_id-1) }}" class="btn btn-secondary">Previous</a>
+                        {% endif %}
+                        
+                        {% if question_id < total_questions %}
+                        <a href="{{ url_for('quiz', question_id=question_id+1) }}" class="btn btn-primary">Next</a>
+                        {% else %}
+                        <a href="{{ url_for('quiz_results') }}" class="btn btn-success">Finish Quiz</a>
+                        {% endif %}
+                    </div>
                 </div>
-                <button id="submitRecording" class="btn large" disabled>Submit Recording</button>
-                <button id="skipSing" class="btn skip">Skip Question</button>
             </div>
         </div>
-
-        <div id="feedbackDisplay" class="feedback-container"></div>
     </div>
 </div>
+
+<!-- Pass question data to JavaScript -->
+<script type="application/json" id="questionData">
+{
+    "id": {{ question_id }},
+    "type": "{{ question.type }}",
+    "reference_note": "{{ question.reference_note }}",
+    "target_note": "{{ question.target_note }}",
+    "options": {{ question.options|tojson }}
+}
+</script>
 {% endblock %}
 
 {% block scripts %}
