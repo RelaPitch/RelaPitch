@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Mode Selection{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Choose Your Quiz Mode</h1>
+    
+    <div class="reference-note-selection mb-4">
+        <h3>Select Reference Note</h3>
+        <select id="referenceNote" class="form-select">
+            <option value="C4">C4</option>
+            <option value="D4">D4</option>
+            <option value="E4">E4</option>
+            <option value="F4">F4</option>
+            <option value="G4">G4</option>
+            <option value="A4">A4</option>
+            <option value="B4">B4</option>
+        </select>
+    </div>
+
+    <div class="mode-selection">
+        <div class="mode-card">
+            <h2>Listen Mode</h2>
+            <p>Test your ability to identify notes by listening to them.</p>
+            <a href="#" class="btn" onclick="startQuiz('listen')">Start Listen Mode</a>
+        </div>
+        <div class="mode-card">
+            <h2>Sing Mode</h2>
+            <p>Test your ability to sing notes accurately.</p>
+            <a href="#" class="btn" onclick="startQuiz('sing')">Start Sing Mode</a>
+        </div>
+    </div>
+    <a href="{{ url_for('home') }}" class="btn secondary">Back to Home</a>
+</div>
+
+<script>
+function startQuiz(mode) {
+    const referenceNote = document.getElementById('referenceNote').value;
+    window.location.href = `/quiz/start/${mode}?reference=${referenceNote}`;
+}
+</script>
+{% endblock %} 
