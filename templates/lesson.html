@@ -69,7 +69,7 @@
         <a href="{{ url_for('lesson', lesson_id=lesson_id-1) }}" class="btn">Previous Lesson</a>
         {% endif %}
         
-        {% if lesson_id < 3 %}
+        {% if lesson_id < 6 %}
         <a href="{{ url_for('lesson', lesson_id=lesson_id+1) }}" class="btn">Next Lesson</a>
         {% endif %}
     </div>
