@@ -142,6 +142,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Helper function to extract note letter from full note name
+    function extractNoteLetter(note) {
+        // Remove any octave number and return just the note letter
+        return note.replace(/[0-9]/g, '');
+    }
+
+    // Helper function to validate note
+    function isValidNote(note) {
+        const validNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C#', 'D#', 'F#', 'G#', 'A#'];
+        return validNotes.includes(note);
+    }
+
     // Initialize the quiz
     await initSampler();
     
@@ -225,7 +237,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!tuner) {
                     tuner = new Tuner();
                     tuner.onNoteDetected = ({ note, frequency }) => {
-                        document.getElementById('pitch').textContent = `${Math.round(frequency)} Hz`;
                         document.getElementById('note').textContent = note;
                         
                         const canvas = document.getElementById('tunerCanvas');
@@ -253,19 +264,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         submitRecordingBtn.addEventListener('click', async () => {
             if (hasAnswered) return; // Prevent multiple submissions
             
-            // Get the current note from the tuner
-            const currentNote = document.getElementById('note').textContent;
-            console.log("Submitting recorded note:", currentNote);
+            // Get the current note from the tuner and extract just the note letter
+            const fullNote = document.getElementById('note').textContent;
+            const noteLetter = extractNoteLetter(fullNote);
+            
+            // Validate the note
+            if (!isValidNote(noteLetter)) {
+                showFeedback(false, "Please sing a valid musical note");
+                return;
+            }
+            
+            console.log("Submitting recorded note:", noteLetter);
             
             // Submit answer
-            const result = await submitAnswer(currentNote);
+            const result = await submitAnswer(noteLetter);
             
             // Visual feedback for sing mode
             const noteDisplay = document.getElementById('note');
             if (result.is_correct) {
                 noteDisplay.style.color = 'green';
+                noteDisplay.textContent = `${noteLetter}`;
             } else {
                 noteDisplay.style.color = 'red';
+                noteDisplay.textContent = `${noteLetter}`;
                 // Show the correct note
                 const correctNoteDiv = document.createElement('div');
                 correctNoteDiv.className = 'alert alert-info mt-2';

@@ -128,7 +128,7 @@ class Tuner {
         const h = Math.round(12 * Math.log2(frequency/c0));
         const octave = Math.floor(h/12);
         const noteIndex = h % 12;
-        return notes[noteIndex] + octave;
+        return notes[noteIndex];
     }
 }
 

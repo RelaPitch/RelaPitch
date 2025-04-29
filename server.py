@@ -181,6 +181,7 @@ def submit_quiz_answer():
         data = request.get_json()
         question_id = data.get('question_id')
         answer = data.get('answer')
+        print('ANSWER',answer)
         
         if not question_id or not answer:
             return jsonify({'success': False, 'error': 'Missing question_id or answer'}), 400
@@ -208,7 +209,7 @@ def submit_quiz_answer():
         else:  # sing mode
             # For sing mode, check if the answer matches the target note
             # Remove any octave number from the answer (e.g., "C4" -> "C")
-            answer_note = answer[0] if answer else ''
+            answer_note = answer
             is_correct = answer_note == target_note[0]
         
         # Store the answer with correctness
