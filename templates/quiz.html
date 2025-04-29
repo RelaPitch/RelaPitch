@@ -53,14 +53,10 @@
                     {% endif %}
 
                     <div class="navigation-buttons text-center mt-4">
-                        {% if question_id > 1 %}
-                        <a href="{{ url_for('quiz', question_id=question_id-1) }}" class="btn btn-secondary">Previous</a>
-                        {% endif %}
-                        
                         {% if question_id < total_questions %}
-                        <a href="{{ url_for('quiz', question_id=question_id+1) }}" class="btn btn-primary">Next</a>
+                        <button class="btn btn-primary" id="nextButton" disabled data-next-url="{{ url_for('quiz', question_id=question_id+1) }}">Next</button>
                         {% else %}
-                        <a href="{{ url_for('quiz_results') }}" class="btn btn-success">Finish Quiz</a>
+                        <button class="btn btn-success" id="finishButton" disabled data-finish-url="{{ url_for('quiz_results') }}">Finish Quiz</button>
                         {% endif %}
                     </div>
                 </div>

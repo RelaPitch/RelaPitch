@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         targetNote: '',
         options: []
     };
+    let hasAnswered = false;
 
     // Initialize Tone.js sampler
     async function initSampler() {
@@ -68,6 +69,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 3000);
     }
 
+    // Enable navigation buttons
+    function enableNavigation() {
+        const nextButton = document.getElementById('nextButton');
+        const finishButton = document.getElementById('finishButton');
+        
+        if (nextButton) {
+            nextButton.disabled = false;
+        }
+        if (finishButton) {
+            finishButton.disabled = false;
+        }
+    }
+
+    // Handle navigation
+    function setupNavigation() {
+        const nextButton = document.getElementById('nextButton');
+        const finishButton = document.getElementById('finishButton');
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                if (!hasAnswered) return; // Prevent navigation if not answered
+                window.location.href = nextButton.dataset.nextUrl;
+            });
+        }
+
+        if (finishButton) {
+            finishButton.addEventListener('click', () => {
+                if (!hasAnswered) return; // Prevent navigation if not answered
+                window.location.href = finishButton.dataset.finishUrl;
+            });
+        }
+    }
+
     // Submit answer to server
     async function submitAnswer(answer) {
         try {
@@ -97,6 +131,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showFeedback(false, `Incorrect. The correct answer was ${result.correct_answer}`);
             }
             
+            // Enable navigation buttons
+            hasAnswered = true;
+            enableNavigation();
+            
             return result;
         } catch (error) {
             console.error('Error submitting answer:', error);
@@ -113,6 +151,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentQuestion = JSON.parse(questionDataElement.textContent);
         console.log("Loaded question data:", currentQuestion);
     }
+    
+    // Set up navigation
+    setupNavigation();
     
     // Set up event listeners for listen mode
     const playReferenceBtn = document.getElementById('playReference');
@@ -135,6 +176,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     noteButtons.forEach(button => {
         button.addEventListener('click', async () => {
+            if (hasAnswered) return; // Prevent multiple submissions
+            
             const selectedNote = button.dataset.note;
             console.log("Selected note:", selectedNote);
             
@@ -208,6 +251,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     if (submitRecordingBtn) {
         submitRecordingBtn.addEventListener('click', async () => {
+            if (hasAnswered) return; // Prevent multiple submissions
+            
             // Get the current note from the tuner
             const currentNote = document.getElementById('note').textContent;
             console.log("Submitting recorded note:", currentNote);
