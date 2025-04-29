@@ -10,6 +10,42 @@
         {{ lesson.content | safe }}
     </div>
 
+    {% if lesson_id == 4 or lesson_id == 5 %}
+    <div class="drag-drop-exercise">
+        <h2>Practice Exercise</h2>
+        <div class="exercise-description">
+            <p>Given a reference note and a guess note, drag and drop the notes you would focus on to identify the guess note.</p>
+            <div class="reference-info">
+                <p>Reference Note: <span id="referenceNote">G</span></p>
+                <p>Guess Note: <span id="guessNote">C</span> (sounds lower)</p>
+            </div>
+        </div>
+        
+        <div class="drag-drop-container">
+            <div class="available-notes">
+                <h3>Available Notes</h3>
+                <div class="notes-list" id="availableNotes">
+                    <!-- Notes will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="selected-notes">
+                <h3>Notes to Focus On</h3>
+                <div class="notes-list" id="selectedNotes">
+                    <!-- Selected notes will appear here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="exercise-controls">
+            <button id="checkAnswer" class="btn">Check Answer</button>
+            <button id="resetExercise" class="btn">Reset</button>
+        </div>
+        
+        <div id="feedback" class="feedback"></div>
+    </div>
+    {% endif %}
+
     {% if lesson.keyboard %}
     <div class="keyboard-container">
         <h2 class="keyboard-header">Interactive Keyboard</h2>
@@ -59,7 +95,6 @@
         </div>
         <div class="keyboard-controls">
             <button id="playScale" class="btn">Play Scale</button>
-            <button id="playRandomNote" class="btn">Play Random Note</button>
         </div>
     </div>
     {% endif %}

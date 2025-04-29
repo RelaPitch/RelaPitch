@@ -73,22 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Play a random note
-    const playRandomNote = async () => {
-        const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
-        const randomNote = notes[Math.floor(Math.random() * notes.length)];
-        const key = document.querySelector(`[data-note="${randomNote}"]`);
-        if (key) {
-            // Add active class before playing the note
-            key.classList.add('active');
-            // Play the note
-            await playNote(randomNote);
-            // Wait for the note to finish
-            await new Promise(resolve => setTimeout(resolve, 500));
-            // Remove active class after the note is done
-            key.classList.remove('active');
-        }
-    };
 
     // Add click event listeners to keys
     document.querySelectorAll('.white, .black').forEach(key => {
@@ -143,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add event listeners to control buttons
     document.getElementById('playScale').addEventListener('click', playScale);
-    document.getElementById('playRandomNote').addEventListener('click', playRandomNote);
 
     // Add keyboard event listeners
     document.addEventListener('keydown', (e) => {
