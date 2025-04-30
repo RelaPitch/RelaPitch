@@ -5,11 +5,11 @@
 {% block content %}
 <div class="lesson-container">
     <div class="lesson-header">
-        <div class="lesson-progress">
+        <div class="lesson-progress-container">
             <div class="progress-bar">
                 <div class="progress progress-lesson-{{ lesson_id }}"></div>
             </div>
-            <div class="progress-text-container">
+            <div class="progress-dropdown">
                 <button class="progress-text-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lesson-menu">
                     Lesson {{ lesson_id }} of 6 <span class="arrow">▼</span>
                 </button>
@@ -27,8 +27,6 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
-        <div class="lesson-dropdown">
         </div>
     </div>
     <h1>{{ lesson.title }}</h1>
@@ -141,5 +139,4 @@
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <script src="{{ url_for('static', filename='js/lesson.js') }}"></script>
-<script src="{{ url_for('static', filename='js/drag-drop.js') }}"></script>
 {% endblock %}

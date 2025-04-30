@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Dropdown functionality
-    const dropdownBtn = document.querySelector('.progress-text-btn'); 
+    const dropdownBtn = document.querySelector('.progress-text-btn');
     const dropdownContent = document.querySelector('.dropdown-content');
-    const dropdownContainer = document.querySelector('.progress-text-container'); 
+    const lessonDropdown = document.querySelector('.progress-dropdown');
 
-    if (dropdownBtn && dropdownContent && dropdownContainer) {
+    if (dropdownBtn && dropdownContent && lessonDropdown) {
         // Toggle dropdown on button click
         dropdownBtn.addEventListener('click', function(e) {
             e.stopPropagation(); // Prevent click from reaching document
@@ -15,20 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
-            if (!dropdownContainer.contains(e.target)) { 
+            if (!lessonDropdown.contains(e.target)) {
                 dropdownContent.classList.remove('show');
-                dropdownBtn.setAttribute('aria-expanded', 'false'); 
+                dropdownBtn.setAttribute('aria-expanded', 'false');
             }
         });
 
-        // Prevent dropdown from closing when clicking inside it, but close on link click
+        // Close dropdown when a lesson link is clicked
         dropdownContent.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
                 dropdownContent.classList.remove('show');
-                dropdownBtn.setAttribute('aria-expanded', 'false'); 
-                // No stopPropagation here, let the link navigation happen
-            } else {
-                e.stopPropagation(); 
+                dropdownBtn.setAttribute('aria-expanded', 'false');
+            }
+            else {
+                e.stopPropagation();
             }
         });
     }
