@@ -14,14 +14,20 @@ LESSONS = {
         "content": """
         <h2>Diatonic Scale</h2>
         <p>In music theory, the diatonic scale consists of 7 notes (in one octave): C, D, E, F, G, A, B. These are the white keys shown on the piano.</p>
+        <p>Click on the Play Scale button to hear the scale.</p>
+        <button id="playScale" class="btn">Play Scale</button>
         
         <h2>What is an Octave?</h2>
         <p>An octave is the distance from one pitch to another that has double its frequency. In other words, the two pitches sound the same but one is simply higher/lower in pitch than the other.</p>
         <p>Examples: C to C, E to E, A to A, etc.</p>
-        
+        <p>Click on the Play Octave button to hear an example of an octave.</p>
+        <button id="playOctave" class="btn">Play Octave</button>
+
         <h2>Chromatic Scale</h2>
         <p>The black keys combine with the white keys to form the chromatic scale, which consists of all 12 pitches:</p>
         <p>C, C# or Db, D, D# or Eb, E, F, F# or Gb, G, G# or Ab, A, A# or Bb, B</p>
+        <p>Click on the Play Chromatic Scale button to hear the scale.</p>
+        <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>
         """,
         "keyboard": True
     },

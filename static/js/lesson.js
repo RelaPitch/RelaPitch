@@ -113,6 +113,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const playOctave = async () => {
+        const octave = ['C4', 'C5'];
+        for (let i = 0; i < octave.length; i++) {
+            const note = octave[i];
+            const key = document.querySelector(`[data-note="${note}"]`);
+            if (key) {
+                // Add active class before playing the note
+                key.classList.add('active');
+                // Play the note
+                await playNote(note);
+                // Wait for the note to finish
+                await new Promise(resolve => setTimeout(resolve, 500));
+                // Remove active class after the note is done
+                key.classList.remove('active');
+            }
+        }
+    };
+
+    const playChromaticScale = async () => {
+        const scale = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5'];
+        for (let i = 0; i < scale.length; i++) {
+            const note = scale[i];
+            const key = document.querySelector(`[data-note="${note}"]`);
+            if (key) {
+                // Add active class before playing the note
+                key.classList.add('active');
+                // Play the note
+                await playNote(note);
+                // Wait for the note to finish
+                await new Promise(resolve => setTimeout(resolve, 500));
+                // Remove active class after the note is done
+                key.classList.remove('active');
+            }
+        }
+    };
+
 
     // Add click event listeners to keys
     document.querySelectorAll('.white, .black').forEach(key => {
@@ -166,7 +202,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add event listeners to control buttons
-    document.getElementById('playScale').addEventListener('click', playScale);
+    if (document.getElementById('playScale')) {
+        document.getElementById('playScale').addEventListener('click', function() {
+            playScale(); // Your playScale function call
+            const keyboardContainer = document.querySelector('.keyboard-container');
+            if (keyboardContainer) {
+                keyboardContainer.scrollIntoView({
+                    behavior: 'smooth', // For smooth scrolling
+                    block: 'start'      // Scrolls to the top of the element
+                });
+            }
+        });
+    }
+    if (document.getElementById('playOctave')) {
+        document.getElementById('playOctave').addEventListener('click', function() {
+            playOctave(); // Your playOctave function call
+            const keyboardContainer = document.querySelector('.keyboard-container');
+            if (keyboardContainer) {
+                keyboardContainer.scrollIntoView({
+                    behavior: 'smooth', // For smooth scrolling
+                    block: 'start'      // Scrolls to the top of the element
+                });
+            }
+        });
+    }
+    if (document.getElementById('playChromaticScale')) {
+        document.getElementById('playChromaticScale').addEventListener('click', function() {
+            playChromaticScale(); // Your playChromaticScale function call
+            const keyboardContainer = document.querySelector('.keyboard-container');
+            if (keyboardContainer) {
+                keyboardContainer.scrollIntoView({
+                    behavior: 'smooth', // For smooth scrolling
+                    block: 'start'      // Scrolls to the top of the element
+                });
+            }
+        });
+    }
 
     // Add keyboard event listeners
     document.addEventListener('keydown', (e) => {

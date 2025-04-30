@@ -790,3 +790,15 @@ footer {
     background-color: #7f8c8d;
     transform: scale(1.05);
 }
+
+#playScale {
+    margin-bottom: 1rem;
+}
+
+#playOctave {
+    margin-bottom: 1rem;
+}
+
+#playChromaticScale {
+    margin-bottom: 1rem;
+}
