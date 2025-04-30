@@ -4,19 +4,23 @@
 
 {% block content %}
 <div class="container">
-    <h1>Choose Your Quiz Mode</h1>
+    <h1 class="text-center mb-4">Choose Your Quiz Mode</h1>
     
-    <div class="reference-note-selection mb-4">
-        <h3>Select Reference Note</h3>
-        <select id="referenceNote" class="form-select">
-            <option value="C4">C4</option>
-            <option value="D4">D4</option>
-            <option value="E4">E4</option>
-            <option value="F4">F4</option>
-            <option value="G4">G4</option>
-            <option value="A4">A4</option>
-            <option value="B4">B4</option>
-        </select>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-4">
+            <div class="reference-note-selection text-center">
+                <h3>Select Reference Note</h3>
+                <select id="referenceNote" class="form-select">
+                    <option value="C4">C4</option>
+                    <option value="D4">D4</option>
+                    <option value="E4">E4</option>
+                    <option value="F4">F4</option>
+                    <option value="G4">G4</option>
+                    <option value="A4">A4</option>
+                    <option value="B4">B4</option>
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="mode-selection">
@@ -31,7 +35,9 @@
             <a href="#" class="btn" onclick="startQuiz('sing')">Start Sing Mode</a>
         </div>
     </div>
-    <a href="{{ url_for('home') }}" class="btn secondary">Back to Home</a>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}" class="btn secondary">Back to Home</a>
+    </div>
 </div>
 
 <script>
