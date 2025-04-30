@@ -2,6 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Define the musical notes
     const allNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
     
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+    
     // Get DOM elements
     const availableNotesContainer = document.getElementById('availableNotes');
     const selectedNotesContainer = document.getElementById('selectedNotes');
@@ -19,8 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
             feedbackElement.textContent = '';
             feedbackElement.className = 'feedback';
             
-            // Create note elements
-            allNotes.forEach(note => {
+            // Create note elements with shuffled order
+            const shuffledNotes = shuffleArray([...allNotes]);
+            shuffledNotes.forEach(note => {
                 const noteElement = document.createElement('div');
                 noteElement.className = 'note-item';
                 noteElement.textContent = note;
@@ -77,10 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (guessIndex < referenceIndex) {
                 // Guess note is lower
-                correctNotes = allNotes.slice(guessIndex, referenceIndex);
+                correctNotes = allNotes.slice(guessIndex, referenceIndex + 1);
+                console.log(correctNotes)
             } else {
                 // Guess note is higher
-                correctNotes = allNotes.slice(referenceIndex + 1, guessIndex + 1);
+                correctNotes = allNotes.slice(referenceIndex, guessIndex + 1);
             }
             
             // Check if the selected notes match the correct notes

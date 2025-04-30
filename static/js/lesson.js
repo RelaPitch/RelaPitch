@@ -1,4 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Dropdown functionality
+    const dropdownBtn = document.querySelector('.dropdown-btn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const lessonDropdown = document.querySelector('.lesson-dropdown');
+
+    if (dropdownBtn && dropdownContent && lessonDropdown) {
+        // Toggle dropdown on button click
+        dropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click from reaching document
+            const isExpanded = dropdownContent.classList.contains('show');
+            dropdownContent.classList.toggle('show');
+            dropdownBtn.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!lessonDropdown.contains(e.target)) {
+                dropdownContent.classList.remove('show');
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside it
+        dropdownContent.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                dropdownContent.classList.remove('show');
+            }
+            e.stopPropagation();
+        });
+    }
+
     let sampler;
     const noteTimers = {}; // Track when each note was played
     let isAudioInitialized = false;
