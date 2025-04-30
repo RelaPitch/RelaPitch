@@ -40,6 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Listen for the first click on the page
+    document.addEventListener("click", async function onFirstClick() {
+        await initSampler();
+        document.removeEventListener("click", onFirstClick); // remove to avoid redundant calls
+    });
+
     // Play a note
     function playNote(note) {
         if (!isSamplerReady) {
@@ -232,40 +238,165 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     if (startTunerBtn) {
         startTunerBtn.addEventListener('click', async () => {
-            console.log("Starting tuner");
-            try {
-                if (!tuner) {
-                    tuner = new Tuner();
-                    tuner.onNoteDetected = ({ note, frequency }) => {
-                        document.getElementById('note').textContent = note;
+            if (startTunerBtn.textContent === 'Start Recording') {
+                console.log("Starting tuner");
+                try {
+                    if (!tuner) {
+                        tuner = new Tuner();
+                        tuner.currentNote = ''; // Add property to store current note
+                        tuner.currentFrequency = 0; // Add property to store current frequency
                         
-                        const canvas = document.getElementById('tunerCanvas');
-                        const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        
-                        ctx.fillStyle = '#3498db';
-                        const barHeight = 20;
-                        const barWidth = (frequency / 1000) * canvas.width;
-                        ctx.fillRect(0, canvas.height/2 - barHeight/2, barWidth, barHeight);
-                    };
+                        tuner.onNoteDetected = ({ note, frequency }) => {
+                            tuner.currentNote = note;
+                            tuner.currentFrequency = frequency;
+                            document.getElementById('pitch').textContent = `${Math.round(frequency)} Hz`;
+                            
+                            const canvas = document.getElementById('tunerCanvas');
+                            const ctx = canvas.getContext('2d');
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            
+                            ctx.fillStyle = '#3498db';
+                            const barHeight = 20;
+                            const barWidth = (frequency / 1000) * canvas.width;
+                            ctx.fillRect(0, canvas.height/2 - barHeight/2, barWidth, barHeight);
+                        };
+                    }
+                    
+                    await tuner.start();
+                    startTunerBtn.textContent = 'Stop Recording';
+                    startTunerBtn.classList.remove('btn-primary');
+                    startTunerBtn.classList.add('btn-danger');
+                    submitRecordingBtn.disabled = false;
+                    helpButton.disabled = false;
+                } catch (error) {
+                    console.error("Error starting tuner:", error);
+                    alert("Error accessing microphone. Please ensure you have granted microphone permissions.");
                 }
+            } else {
+                // Stop recording
+                console.log("Stopping tuner");
+                if (tuner) {
+                    tuner.stop();
+                }
+                startTunerBtn.textContent = 'Start Recording';
+                startTunerBtn.classList.remove('btn-danger');
+                startTunerBtn.classList.add('btn-primary');
+                helpButton.disabled = true;
                 
-                await tuner.start();
-                startTunerBtn.disabled = true;
-                submitRecordingBtn.disabled = false;
-            } catch (error) {
-                console.error("Error starting tuner:", error);
-                alert("Error accessing microphone. Please ensure you have granted microphone permissions.");
+                // Clear the feedback if help was enabled
+                if (isHelpEnabled) {
+                    const feedbackElement = document.getElementById('singingFeedback');
+                    if (feedbackElement) {
+                        feedbackElement.remove();
+                    }
+                    isHelpEnabled = false;
+                    helpButton.textContent = 'Enable Hint';
+                    helpButton.classList.remove('btn-danger');
+                    helpButton.classList.add('btn-outline-primary');
+                    if (helpInterval) {
+                        clearInterval(helpInterval);
+                        helpInterval = null;
+                    }
+                }
             }
         });
     }
-    
+
+    // Add help button functionality
+    const helpButton = document.getElementById('helpButton');
+    let isHelpEnabled = false;
+    let helpInterval = null;
+
+    if (helpButton) {
+        helpButton.addEventListener('click', () => {
+            isHelpEnabled = !isHelpEnabled;
+            
+            if (isHelpEnabled) {
+                helpButton.textContent = 'Disable Hint';
+                helpButton.classList.add('btn-danger');
+                helpButton.classList.remove('btn-outline-primary');
+                
+                // Create feedback element if it doesn't exist
+                let feedbackElement = document.getElementById('singingFeedback');
+                if (!feedbackElement) {
+                    feedbackElement = document.createElement('div');
+                    feedbackElement.id = 'singingFeedback';
+                    feedbackElement.className = 'mt-2 text-center';
+                    document.getElementById('pitch').parentNode.appendChild(feedbackElement);
+                }
+                
+                // Start updating feedback continuously
+                helpInterval = setInterval(() => {
+                    if (!tuner || !tuner.currentNote) {
+                        feedbackElement.textContent = "Please start recording first";
+                        feedbackElement.style.color = '#dc3545'; // Red
+                        return;
+                    }
+
+                    const referenceNote = currentQuestion.reference_note[0];
+                    const currentNote = extractNoteLetter(tuner.currentNote);
+                    const targetNote = currentQuestion.target_note[0];
+                    
+                    const noteOrder = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+                    const currentIndex = noteOrder.indexOf(currentNote);
+                    const targetIndex = noteOrder.indexOf(targetNote);
+                    
+                    if (currentIndex < targetIndex) {
+                        feedbackElement.textContent = "Sing higher";
+                        feedbackElement.style.color = '#dc3545'; // Red
+                    } else if (currentIndex > targetIndex) {
+                        feedbackElement.textContent = "Sing lower";
+                        feedbackElement.style.color = '#dc3545'; // Red
+                    } else {
+                        feedbackElement.textContent = "Correct note!";
+                        feedbackElement.style.color = '#28a745'; // Green
+                    }
+                }, 100); // Update every 100ms
+            } else {
+                helpButton.textContent = 'Enable Hint';
+                helpButton.classList.remove('btn-danger');
+                helpButton.classList.add('btn-outline-primary');
+                
+                // Clear the interval and remove feedback
+                if (helpInterval) {
+                    clearInterval(helpInterval);
+                    helpInterval = null;
+                }
+                
+                const feedbackElement = document.getElementById('singingFeedback');
+                if (feedbackElement) {
+                    feedbackElement.remove();
+                }
+            }
+        });
+    }
+
+    // Helper function to get frequency of a note
+    function getNoteFrequency(note) {
+        // This is a simplified version - in a real app, you'd want a more accurate conversion
+        const notes = {
+            'C4': 261.63,
+            'C#4': 277.18,
+            'D4': 293.66,
+            'D#4': 311.13,
+            'E4': 329.63,
+            'F4': 349.23,
+            'F#4': 369.99,
+            'G4': 392.00,
+            'G#4': 415.30,
+            'A4': 440.00,
+            'A#4': 466.16,
+            'B4': 493.88
+        };
+        return notes[note] || 440; // Default to A4 if note not found
+    }
+
     if (submitRecordingBtn) {
         submitRecordingBtn.addEventListener('click', async () => {
             if (hasAnswered) return; // Prevent multiple submissions
             
             // Get the current note from the tuner and extract just the note letter
-            const fullNote = document.getElementById('note').textContent;
+            const fullNote = tuner.currentNote;
             const noteLetter = extractNoteLetter(fullNote);
             
             // Validate the note
@@ -280,19 +411,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             const result = await submitAnswer(noteLetter);
             
             // Visual feedback for sing mode
-            const noteDisplay = document.getElementById('note');
+            const noteDisplay = document.createElement('div');
+            noteDisplay.id = 'noteDisplay';
+            noteDisplay.className = 'mt-3';
             if (result.is_correct) {
                 noteDisplay.style.color = 'green';
-                noteDisplay.textContent = `${noteLetter}`;
+                noteDisplay.textContent = `Correct! You sang ${noteLetter}`;
             } else {
                 noteDisplay.style.color = 'red';
-                noteDisplay.textContent = `${noteLetter}`;
-                // Show the correct note
-                const correctNoteDiv = document.createElement('div');
-                correctNoteDiv.className = 'alert alert-info mt-2';
-                correctNoteDiv.textContent = `Correct note: ${result.correct_answer}`;
-                noteDisplay.parentNode.appendChild(correctNoteDiv);
+                noteDisplay.textContent = `Incorrect. You sang ${noteLetter}, but the correct note was ${result.correct_answer}`;
             }
+            
+            // Add the feedback to the page
+            const tunerDisplay = document.getElementById('tunerDisplay');
+            tunerDisplay.appendChild(noteDisplay);
             
             // Stop the tuner
             if (tuner) {
@@ -300,6 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             startTunerBtn.disabled = false;
             submitRecordingBtn.disabled = true;
+            helpButton.disabled = true;
         });
     }
 }); 

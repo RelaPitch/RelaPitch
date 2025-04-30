@@ -38,6 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize immediately
     initTone();
 
+    // Listen for the first click on the page
+    document.addEventListener("click", async function onFirstClick() {
+        await initTone();
+        document.removeEventListener("click", onFirstClick); // remove to avoid redundant calls
+    });
+
     // Play a note
     const playNote = async (note) => {
         if (!isAudioInitialized) {
