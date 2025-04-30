@@ -16,13 +16,12 @@
                         <p class="lead">You got {{ correct_answers }} out of {{ total_questions }} questions correct!</p>
                     </div>
                     
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" 
+                    <div class="progress-bar mb-4">
+                        <div class="progress" role="progressbar" 
                              style="width: {{ score }}%;" 
                              aria-valuenow="{{ score }}" 
                              aria-valuemin="0" 
                              aria-valuemax="100">
-                            {{ "%.1f"|format(score) }}%
                         </div>
                     </div>
 
