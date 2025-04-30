@@ -250,6 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             tuner.currentNote = note;
                             tuner.currentFrequency = frequency;
                             document.getElementById('pitch').textContent = `${Math.round(frequency)} Hz`;
+                            document.getElementById('note').textContent = note;
                             
                             const canvas = document.getElementById('tunerCanvas');
                             const ctx = canvas.getContext('2d');
