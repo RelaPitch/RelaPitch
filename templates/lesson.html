@@ -3,25 +3,25 @@
 {% block title %}{{ lesson.title }}{% endblock %}
 
 {% block content %}
-<div class="page-layout">
-    <div class="lesson-dropdown">
-        <button class="dropdown-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lesson-menu">Jump to Lesson <span class="arrow">▼</span></button>
-        <div class="dropdown-content" id="lesson-menu" role="menu">
-            {% for i in range(1, 7) %}
-            <a href="{{ url_for('lesson', lesson_id=i) }}" {% if i == lesson_id %}class="active"{% endif %}>
-                Lesson {{ i }}: {% if i == 1 %}Introduction to Intervals
-                {% elif i == 2 %}Basic Interval Recognition
-                {% elif i == 3 %}Ascending Intervals
-                {% elif i == 4 %}Descending Intervals
-                {% elif i == 5 %}Mixed Interval Practice
-                {% else %}Final Challenge
-                {% endif %}
-            </a>
-            {% endfor %}
-        </div>
+<div class="content-wrapper">
+<div class="lesson-dropdown">
+    <button class="dropdown-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lesson-menu">Jump to Lesson <span class="arrow">▼</span></button>
+    <div class="dropdown-content" id="lesson-menu" role="menu">
+        {% for i in range(1, 7) %}
+        <a href="{{ url_for('lesson', lesson_id=i) }}" {% if i == lesson_id %}class="active"{% endif %}>
+            Lesson {{ i }}: {% if i == 1 %}Introduction to Intervals
+            {% elif i == 2 %}Basic Interval Recognition
+            {% elif i == 3 %}Ascending Intervals
+            {% elif i == 4 %}Descending Intervals
+            {% elif i == 5 %}Mixed Interval Practice
+            {% else %}Final Challenge
+            {% endif %}
+        </a>
+        {% endfor %}
     </div>
+</div>
 
-    <div class="lesson-container">
+<div class="lesson-container">
         <div class="lesson-header">
             <div class="lesson-progress">
                 <div class="progress-bar">
