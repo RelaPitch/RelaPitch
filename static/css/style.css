@@ -192,7 +192,7 @@ body {
 
 .note-btn {
     padding: 1rem;
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -201,7 +201,7 @@ body {
 }
 
 .note-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 #tunerDisplay {
@@ -801,4 +801,62 @@ footer {
 
 #playChromaticScale {
     margin-bottom: 1rem;
+}
+
+#playHalfStep1 {
+    margin-bottom: 1rem;
+}
+#playHalfStep2 {
+    margin-bottom: 1rem;
+}
+#playHalfStep3 {
+    margin-bottom: 1rem;
+}
+#playHalfStep4 {
+    margin-bottom: 1rem;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.quiz-ask {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.quiz-btn {
+    display: inline-block;
+    width: 150px;
+    background-color: #4CAF50; /* green */
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.review-btn {
+    display: inline-block;
+    width: 165px;
+    background-color: #ddd; /* light grey */
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    align-items: center;
+}
+
+.halfstep-item {
+    display: flex;
+    align-items: center;
+}
+
+.halfstep-item button {
+    margin-left: 15px;
+    margin-bottom: 1rem;
+}
+
+.hidden {
+    display: none;
 }

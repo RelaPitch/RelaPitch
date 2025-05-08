@@ -17,6 +17,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkAnswerButton = document.getElementById('checkAnswer');
     const resetButton = document.getElementById('resetExercise');
     const feedbackElement = document.getElementById('feedback');
+
+    function getRandomNotes(allNotes) {
+        const referenceIndex = Math.floor(Math.random() * allNotes.length);
+        let guessIndex;
+        do {
+            guessIndex = Math.floor(Math.random() * allNotes.length);
+        } while (guessIndex === referenceIndex);  // Ensure they are different
+    
+        return {
+            referenceNote: allNotes[referenceIndex],
+            guessNote: allNotes[guessIndex]
+        };
+    }
+    const { referenceNote, guessNote } = getRandomNotes(allNotes);
+
+    document.getElementById('referenceNote').textContent = referenceNote;
+    document.getElementById('guessNote').textContent = guessNote;
     
     // Only initialize if all required elements exist
     if (availableNotesContainer && selectedNotesContainer && checkAnswerButton && resetButton && feedbackElement) {
@@ -63,40 +80,59 @@ document.addEventListener('DOMContentLoaded', function() {
         function handleDragOver(e) {
             e.preventDefault();
         }
-        
+
         function handleDrop(e) {
             e.preventDefault();
             const note = e.dataTransfer.getData('text/plain');
             const draggedElement = document.querySelector('.dragging');
-            
+        
             if (draggedElement) {
-                e.target.appendChild(draggedElement);
+                // Only append to the container itself, not a note inside
+                if (e.currentTarget === availableNotesContainer || e.currentTarget === selectedNotesContainer) {
+                    e.currentTarget.appendChild(draggedElement);
+                }
             }
         }
-        
+
         // Check answer
         function checkAnswer() {
             const referenceNote = document.getElementById('referenceNote').textContent;
-            const guessNote = document.getElementById('guessNote').textContent;
             const selectedNotes = Array.from(selectedNotesContainer.children).map(el => el.textContent);
-            
             // Determine the correct notes based on whether the guess note is higher or lower
             const referenceIndex = allNotes.indexOf(referenceNote);
-            const guessIndex = allNotes.indexOf(guessNote);
-            let correctNotes;
-            
-            if (guessIndex < referenceIndex) {
-                // Guess note is lower
-                correctNotes = allNotes.slice(guessIndex, referenceIndex + 1);
-                console.log(correctNotes)
+            let correctNotes = [];
+    
+            let type_exercise = document.getElementById('guessText').textContent;
+
+            if (type_exercise.includes("lower")) {
+                let idx = (referenceIndex - 1);
+                while (true) {
+                    if (idx === referenceIndex) break;
+                    correctNotes.push(allNotes[idx]);
+                    if (idx === 0) {
+                        idx = allNotes.length - 1;
+                    }
+                    else {
+                        idx = idx - 1;
+                    }
+                }
             } else {
-                // Guess note is higher
-                correctNotes = allNotes.slice(referenceIndex, guessIndex + 1);
+                let idx = (referenceIndex + 1);
+                while (true) {
+                    if (idx === allNotes.length) {
+                        idx = 0;
+                    }
+                    if (idx === referenceIndex) break;
+
+                    correctNotes.push(allNotes[idx]);
+                    
+                    idx = idx + 1;
+                }
             }
             
             // Check if the selected notes match the correct notes
             const isCorrect = selectedNotes.length === correctNotes.length &&
-                             selectedNotes.every(note => correctNotes.includes(note));
+                             selectedNotes.every((value, index) => value === correctNotes[index])
             
             // Show feedback
             feedbackElement.textContent = isCorrect ? 

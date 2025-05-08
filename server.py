@@ -10,23 +10,25 @@ app.secret_key = 'your-secret-key-here'  # Required for session
 # Lesson content (this would typically come from a database)
 LESSONS = {
     1: {
-        "title": "Introduction to Musical Notes",
+        "title": "Introduction to Notes",
         "content": """
         <h2>Diatonic Scale</h2>
         <p>In music theory, the diatonic scale consists of 7 notes (in one octave): C, D, E, F, G, A, B. These are the white keys shown on the piano.</p>
-        <p>Click on the Play Scale button to hear the scale.</p>
+        <p>For simplicity, let's just focus on the C major scale, which consists of the notes in the order: C, D, E, F, G, A, B, C. Click on the Play Scale button to hear each note.</p>
         <button id="playScale" class="btn">Play Scale</button>
         
         <h2>What is an Octave?</h2>
-        <p>An octave is the distance from one pitch to another that has double its frequency. In other words, the two pitches sound the same but one is simply higher/lower in pitch than the other.</p>
+        <p>An octave is the distance from one note to another that has double its frequency. In other words, the two notes sound the same but one is simply higher/lower in pitch than the other.</p>
         <p>Examples: C to C, E to E, A to A, etc.</p>
-        <p>Click on the Play Octave button to hear an example of an octave.</p>
+        <p>Click on the Play Octave button to hear an example of an octave, C to C.</p>
         <button id="playOctave" class="btn">Play Octave</button>
 
         <h2>Chromatic Scale</h2>
-        <p>The black keys combine with the white keys to form the chromatic scale, which consists of all 12 pitches:</p>
-        <p>C, C# or Db, D, D# or Eb, E, F, F# or Gb, G, G# or Ab, A, A# or Bb, B</p>
-        <p>Click on the Play Chromatic Scale button to hear the scale.</p>
+        <p>The black keys combine with the white keys to form the chromatic scale, which consists of 12 notes:</p>
+        <p>C, C# or D♭, D, D# or E♭, E, F, F# or G♭, G, G# or A♭, A, A# or B♭, B</p>
+        <p>Notice how some of these notes have 2 different names (such as C# and D♭). These notes are called enharmonic equivalents.</p>
+        <p>Enharmonic equivalents are two notes that sound the same but have different spellings.
+        <p>Click on the Play Chromatic Scale button to hear each note.</p>
         <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>
         """,
         "keyboard": True
@@ -37,15 +39,25 @@ LESSONS = {
         <h2>Half Steps</h2>
         <p>A half step is the distance between two adjacent keys on a keyboard.</p>
         <ul>
-            <li>Notes can either be sharp (#) meaning the note is raised one half step, or flat (b) meaning the note is lowered one half step.</li>
+            <li>Notes can either be sharp (#) meaning the note is raised one half step, or flat (♭) meaning the note is lowered one half step.</li>
             <li>Sharp (#) example: If you started on D and you wanted D#, you would move up one half step.</li>
-            <li>Flat (b) example: If you started on A and you wanted Ab, you would move down one half step.</li>
-            <li>Examples of half steps: C to C#, E to F, A# to A, B to C</li>
+            <li>Flat (♭) example: If you started on A and you wanted A♭, you would move down one half step.</li>
+        </ul>
+        <p>Examples of half steps:</p>
+        <ul>
+            <li class="halfstep-item">C to C#<button id="playHalfStep1" class="btn">Play Example</button></li>
+            <li class="halfstep-item">E to F<button id="playHalfStep2" class="btn">Play Example</button></li>
+            <li class="halfstep-item">A# to A<button id="playHalfStep3" class="btn">Play Example</button></li>
         </ul>
         
         <h2>Whole Steps</h2>
         <p>A whole step is made of two half steps.</p>
-        <p>Examples of whole steps: C to D, E to F, A# to A, B to C</p>
+        <p>Examples of whole steps:</p>
+        <ul>
+            <li class="halfstep-item">C to D<button id="playWholeStep1" class="btn">Play Example</button></li>
+            <li class="halfstep-item">A to G<button id="playWholeStep2" class="btn">Play Example</button></li>
+            <li class="halfstep-item">F# to E<button id="playWholeStep3" class="btn">Play Example</button></li>
+        </ul>
         """,
         "keyboard": True
     },
@@ -57,9 +69,20 @@ LESSONS = {
         <p>Relative pitch refers to the ability to identify or reproduce the pitch of a note in relation to another note.</p>
         <p>You will be given a reference note, and then keeping the pitch of this reference note in mind, will either identify a second note by hearing it or will reproduce it by using your mic.</p>
         
-        <h2>Practicing Relative Pitch</h2>
+        <h2>Practicing Singing/Humming</h2>
         <p>After hearing the reference pitch, try to establish the connection between the pitch and the note name. You could try playing the note on the piano and humming along to the note to reinforce the pitch. It will be important to keep this in mind for the future.</p>
-        <p>For exercise, try first playing any of the white keys, keeping in mind the note name, and hum along with the piano until you match in pitch. After some time, see if you can recreate the same pitch without using the piano for reference.</p>""",
+        <p>For exercise, try first playing any of the white keys, keeping in mind the note name, and hum along with the piano until you match in pitch. After some time, see if you can recreate the same pitch without using the piano for reference.</p>
+        <h3>Exercise: Target note G</h3>
+        <div class="target-note mb-4">
+            <button id="startTuner" class="btn btn-primary">Start Recording</button>
+            <div id="tunerDisplay" class="mt-3">
+                <div id="pitch"></div>
+                <div id="note"></div>
+                <canvas id="tunerCanvas"></canvas>
+                <button id="helpButton" class="btn btn-info mt-3" disabled>Show hint</button>
+            </div>
+        </div>
+        """,
         "keyboard": True
     },
     4: {
@@ -82,11 +105,25 @@ LESSONS = {
         "keyboard": True
     },
     6: {
-        "title": "Recreating Notes",
+        "title": "Recreating Notes (Singing)",
         "content": """
         <p>If you are recreating the guess note, it is up to you whether you want to go higher or lower.</p>
         <p>Based on your decision, try to think of the notes in between your reference note and the guess note.</p>
         <p>Starting from the reference note, try humming in the direction of the guess note (either going higher or lower) until you think you have matched the pitch of the guess note. Use the piano for guidance when first starting.</p>
+        <div class="target-note mb-4">
+            <button id="startTuner" class="btn btn-primary">Start Recording</button>
+            <div id="tunerDisplay" class="mt-3">
+                <div id="pitch"></div>
+                <div id="note"></div>
+                <canvas id="tunerCanvas"></canvas>
+                <button id="helpButton" class="btn btn-info mt-3 hidden" disabled>Show hint</button>
+            </div>
+        </div>
+        <div class="quiz-ask">
+            <h3>Ready to take the quiz?</h3>
+            <a href="/quiz/mode" class="btn quiz-btn">Take Quiz</a>
+            <a href="/lesson/1" class="btn review-btn">Review Lessons</a>
+        </div>
         """,
         "keyboard": True
     }
@@ -162,7 +199,7 @@ def quiz(question_id):
     return render_template('quiz.html', 
                          question=question,
                          question_id=question_id,
-                         total_questions=3)  # Always 3 questions
+                         total_questions=5)
 
 @app.route('/quiz/mode')
 def quiz_mode():
@@ -254,7 +291,7 @@ def quiz_results():
     session.modified = True
     
     return render_template('quiz_results.html', 
-                         score=score,
+                         score=int(score),
                          total_questions=total_questions,
                          correct_answers=correct_answers)
 
