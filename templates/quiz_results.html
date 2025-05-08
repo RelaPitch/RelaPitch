@@ -12,14 +12,14 @@
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <h3 class="display-4">{{ score }}%</h3>
+                        <h3 class="display-4">{{ quiz_score }}%</h3>
                         <p class="lead">You got {{ correct_answers }} out of {{ total_questions }} questions correct!</p>
                     </div>
                     
                     <div class="progress-bar mb-4">
                         <div class="progress" role="progressbar" 
-                             style="width: {{ score }}%;" 
-                             aria-valuenow="{{ score }}" 
+                             style="width: {{ quiz_score }}%;" 
+                             aria-valuenow="{{ quiz_score }}" 
                              aria-valuemin="0" 
                              aria-valuemax="100">
                         </div>

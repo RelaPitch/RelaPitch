@@ -1,11 +1,50 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import os
-from datetime import datetime
+from datetime import datetime, date
 import json
 import random
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Required for session
+
+# Available daily quests
+AVAILABLE_DAILY_QUESTS = [
+    {
+        "quest_id": "sharp_ear",
+        "description": "Get 3 correct answers in 'listen' mode.",
+        "type": "listen_correct_count",
+        "goal_value": 3,
+        "reward_points": 50
+    },
+    {
+        "quest_id": "pitch_tuner",
+        "description": "Get 2 successful matches in 'sing' mode.",
+        "type": "sing_correct_count",
+        "goal_value": 2,
+        "reward_points": 50
+    },
+    {
+        "quest_id": "daily_discovery",
+        "description": "Complete 3 lesson interactions.",
+        "type": "lesson_interaction_count",
+        "goal_value": 3,
+        "reward_points": 30
+    },
+    {
+        "quest_id": "perfect_listener",
+        "description": "Achieve a streak of 4 correct answers in 'listen' mode.",
+        "type": "listen_streak",
+        "goal_value": 4,
+        "reward_points": 75
+    },
+    {
+        "quest_id": "well_rounded_musician",
+        "description": "Get 1 correct 'listen' answer AND 1 successful 'sing' match.",
+        "type": "combined_practice",
+        "goal_value": 2,  # Not directly used, but good for consistency
+        "reward_points": 60
+    }
+]
 
 # Lesson content (this would typically come from a database)
 LESSONS = {
@@ -145,21 +184,110 @@ def init_user_data():
             'quiz_answers': {},
             'quiz_score': 0
         }
+    
+    # Initialize score if not exists
+    if 'score' not in session:
+        session['score'] = 0
+    
+    # Initialize completed items tracking if not exists
+    if 'completed_items' not in session:
+        session['completed_items'] = {}
+    
+    # Daily Quest initialization and reset
+    current_date = date.today().isoformat()
+    if session.get('daily_quest_assigned_date') != current_date or 'current_daily_quest' not in session:
+        # Reset or initialize daily quest
+        selected_quest = random.choice(AVAILABLE_DAILY_QUESTS)
+        session['daily_quest_assigned_date'] = current_date
+        session['current_daily_quest'] = selected_quest
+        
+        # Initialize progress based on quest type
+        if selected_quest['type'] == 'combined_practice':
+            session['daily_quest_progress'] = {'listen_done': False, 'sing_done': False}
+        else:
+            session['daily_quest_progress'] = {'count': 0}
+        
+        # Reset streak count for streak quests
+        session['listen_streak_count'] = 0
+        
+        # Reset completion status
+        session['daily_quest_completed_today'] = False
+
+# Helper functions for scoring and completion tracking
+def award_points_to_session(points_to_award):
+    """Award points to the user's session score"""
+    # Initialize if not exists
+    if 'score' not in session:
+        session['score'] = 0
+    
+    # Add points
+    session['score'] += points_to_award
+    session.modified = True
+    
+    return session['score']
+
+def mark_item_as_completed_in_session(item_id):
+    """Mark an item as completed in the user's session"""
+    # Initialize if not exists
+    if 'completed_items' not in session:
+        session['completed_items'] = {}
+    
+    # Mark item as completed
+    session['completed_items'][item_id] = True
+    session.modified = True
+
+def has_item_been_completed_in_session(item_id):
+    """Check if an item has been completed in the user's session"""
+    # Initialize if not exists
+    if 'completed_items' not in session:
+        session['completed_items'] = {}
+    
+    # Check if item is completed
+    return item_id in session['completed_items']
 
 @app.route('/')
 def home():
     init_user_data()
-    return render_template('home.html')
+    return render_template('home.html',
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
 
 @app.route('/lesson/<int:lesson_id>')
 def lesson(lesson_id):
     init_user_data()
-    if lesson_id in LESSONS:
-        # Record lesson visit
-        session['user_data']['lesson_visits'][str(lesson_id)] = datetime.now().isoformat()
-        session.modified = True
-        return render_template('lesson.html', lesson=LESSONS[lesson_id], lesson_id=lesson_id)
-    return "Lesson not found", 404
+    if lesson_id not in LESSONS:
+        return redirect(url_for('home'))
+    
+    lesson_data = LESSONS[lesson_id]
+    return render_template('lesson.html', 
+                         lesson=lesson_data, 
+                         lesson_id=lesson_id,
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
+
+@app.route('/search')
+def search():
+    init_user_data()
+    query = request.args.get('q', '').strip()
+    results = []
+    if query:
+        for lesson_id, lesson_data in LESSONS.items():
+            if query.lower() in lesson_data['title'].lower() or query.lower() in lesson_data['content'].lower():
+                results.append({'id': lesson_id, 'title': lesson_data['title']})
+    return render_template('search_results.html', 
+                         query=query, 
+                         results=results,
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
 
 @app.route('/quiz/<int:question_id>')
 def quiz(question_id):
@@ -199,12 +327,22 @@ def quiz(question_id):
     return render_template('quiz.html', 
                          question=question,
                          question_id=question_id,
-                         total_questions=5)
+                         total_questions=5,  # Always 3 questions
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
 
 @app.route('/quiz/mode')
 def quiz_mode():
     init_user_data()
-    return render_template('quiz_mode.html')
+    return render_template('quiz_mode.html',
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
 
 @app.route('/quiz/start/<mode>')
 def start_quiz(mode):
@@ -218,6 +356,177 @@ def start_quiz(mode):
     # Redirect to the first question
     return redirect(url_for('quiz', question_id=1))
 
+@app.route('/log_progress', methods=['POST'])
+def log_progress():
+    try:
+        # Ensure user data is initialized
+        init_user_data()
+        
+        # Get data from request
+        data = request.get_json()
+        item_id = data.get('itemId')
+        points_for_this_item = data.get('points', 0)
+        item_type = data.get('itemType', 'generic')
+        
+        if not item_id:
+            return jsonify({'success': False, 'error': 'Missing itemId'}), 400
+        
+        # Check if this item has already been completed
+        is_already_completed = has_item_been_completed_in_session(item_id)
+        
+        # Current score before any updates
+        new_score = session.get('score', 0)
+        awarded_item_points = 0
+        
+        # Conditional Point Awarding for the Item Itself
+        if not is_already_completed:
+            # Award points for this specific item interaction
+            new_score = award_points_to_session(points_for_this_item)
+            # Mark as completed to prevent future awards
+            mark_item_as_completed_in_session(item_id)
+            # Set status and awarded points
+            status_message = "success_new_item"
+            awarded_item_points = points_for_this_item
+        else:
+            # Do NOT award points again for this item
+            status_message = "success_item_already_completed"
+        
+        # Daily Quest Progress Update (Happens regardless of item completion status)
+        # This allows interactions to still count toward quest progress even if points
+        # aren't awarded for the specific item again
+        quest_update = update_daily_quest_progress(item_type)
+        
+        # Return detailed JSON response
+        return jsonify({
+            'status': status_message,
+            'new_score': new_score,
+            'awarded_item_points': awarded_item_points,
+            'message': "Points awarded!" if not is_already_completed else "Item already completed, no new points",
+            'daily_quest_update': quest_update
+        })
+    except Exception as e:
+        print(f"Error logging progress: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# Helper function to update daily quest progress
+def update_daily_quest_progress(item_type, is_correct=True):
+    """Update daily quest progress based on action type"""
+    # Initialize user data if needed
+    init_user_data()
+    
+    # Return early if quest is already completed today
+    if session.get('daily_quest_completed_today', False):
+        return get_daily_quest_data()
+    
+    # Get current quest
+    current_quest = session.get('current_daily_quest')
+    if not current_quest:
+        return get_daily_quest_data()
+    
+    quest_type = current_quest['type']
+    quest_updated = False
+    
+    # Update progress based on quest type and action
+    if quest_type == 'listen_correct_count' and item_type == 'listen_correct' and is_correct:
+        # Increment count for listen correct count quests
+        session['daily_quest_progress']['count'] = session['daily_quest_progress'].get('count', 0) + 1
+        quest_updated = True
+    
+    elif quest_type == 'sing_correct_count' and item_type == 'sing_correct' and is_correct:
+        # Increment count for sing correct count quests
+        session['daily_quest_progress']['count'] = session['daily_quest_progress'].get('count', 0) + 1
+        quest_updated = True
+    
+    elif quest_type == 'lesson_interaction_count' and item_type == 'lesson_interaction':
+        # Increment count for lesson interaction count quests
+        session['daily_quest_progress']['count'] = session['daily_quest_progress'].get('count', 0) + 1
+        quest_updated = True
+    
+    elif quest_type == 'listen_streak':
+        if item_type == 'listen_correct' and is_correct:
+            # Increment streak count for listen streak quests
+            session['listen_streak_count'] = session.get('listen_streak_count', 0) + 1
+            quest_updated = True
+        elif item_type == 'listen_correct' and not is_correct:
+            # Reset streak count if wrong answer
+            session['listen_streak_count'] = 0
+            quest_updated = True
+    
+    elif quest_type == 'combined_practice':
+        if item_type == 'listen_correct' and is_correct:
+            # Mark listen as done for combined practice quests
+            session['daily_quest_progress']['listen_done'] = True
+            quest_updated = True
+        elif item_type == 'sing_correct' and is_correct:
+            # Mark sing as done for combined practice quests
+            session['daily_quest_progress']['sing_done'] = True
+            quest_updated = True
+    
+    # Check if quest is completed
+    quest_completed = False
+    if quest_updated:
+        if quest_type == 'listen_correct_count' or quest_type == 'sing_correct_count' or quest_type == 'lesson_interaction_count':
+            # Check count against goal
+            if session['daily_quest_progress'].get('count', 0) >= current_quest['goal_value']:
+                quest_completed = True
+        
+        elif quest_type == 'listen_streak':
+            # Check streak count against goal
+            if session.get('listen_streak_count', 0) >= current_quest['goal_value']:
+                quest_completed = True
+        
+        elif quest_type == 'combined_practice':
+            # Check if both listen and sing are done
+            if session['daily_quest_progress'].get('listen_done', False) and session['daily_quest_progress'].get('sing_done', False):
+                quest_completed = True
+    
+    # If quest is completed, award points and mark as completed
+    if quest_completed and not session.get('daily_quest_completed_today', False):
+        session['daily_quest_completed_today'] = True
+        award_points_to_session(current_quest['reward_points'])
+        mark_item_as_completed_in_session(f"daily_quest_done_{current_quest['quest_id']}_{session['daily_quest_assigned_date']}")
+    
+    session.modified = True
+    return get_daily_quest_data()
+
+# Helper function to get daily quest data
+def get_daily_quest_data():
+    """Get current daily quest data in format suitable for JSON response"""
+    # Get current quest
+    current_quest = session.get('current_daily_quest', {})
+    if not current_quest:
+        return {
+            'quest_description': "No quest available",
+            'quest_progress': 0,
+            'quest_goal': 0,
+            'quest_completed': False
+        }
+    
+    # Format progress based on quest type
+    quest_type = current_quest['type']
+    progress = 0
+    goal = current_quest.get('goal_value', 1)
+    
+    if quest_type == 'listen_correct_count' or quest_type == 'sing_correct_count' or quest_type == 'lesson_interaction_count':
+        progress = session.get('daily_quest_progress', {}).get('count', 0)
+    
+    elif quest_type == 'listen_streak':
+        progress = session.get('listen_streak_count', 0)
+    
+    elif quest_type == 'combined_practice':
+        # For combined practice, show completion of both parts
+        listen_done = session.get('daily_quest_progress', {}).get('listen_done', False)
+        sing_done = session.get('daily_quest_progress', {}).get('sing_done', False)
+        progress = (1 if listen_done else 0) + (1 if sing_done else 0)
+        goal = 2  # Both listen and sing need to be done
+    
+    return {
+        'quest_description': current_quest.get('description', ""),
+        'quest_progress': progress,
+        'quest_goal': goal,
+        'quest_completed': session.get('daily_quest_completed_today', False)
+    }
+
 @app.route('/quiz/submit', methods=['POST'])
 def submit_quiz_answer():
     try:
@@ -230,13 +539,7 @@ def submit_quiz_answer():
             return jsonify({'success': False, 'error': 'Missing question_id or answer'}), 400
         
         # Initialize user data if not exists
-        if 'user_data' not in session:
-            session['user_data'] = {
-                'start_time': datetime.now().isoformat(),
-                'lesson_visits': {},
-                'quiz_answers': {},
-                'quiz_score': 0
-            }
+        init_user_data()
         
         # Get the mode from the session
         mode = session.get('quiz_mode', 'listen')
@@ -264,11 +567,30 @@ def submit_quiz_answer():
         }
         session.modified = True
         
+        # Generate static item ID for this question answer (no timestamp)
+        # This ensures points are only awarded once for correctly answering each question
+        item_id = f"quiz_{mode}_{question_id}_correct" if is_correct else f"quiz_{mode}_{question_id}_incorrect"
+        
+        # Award points if correct (only first time)
+        points_awarded = 0
+        if is_correct and not has_item_been_completed_in_session(item_id):
+            points_to_award = 10  # Points for correct answer
+            award_points_to_session(points_to_award)
+            mark_item_as_completed_in_session(item_id)
+            points_awarded = points_to_award
+        
+        # Update daily quest progress
+        item_type = f"{mode}_correct" if is_correct else f"{mode}_incorrect"
+        quest_update = update_daily_quest_progress(item_type, is_correct)
+        
         print(f"Stored answer for question {question_id}: {answer} (Correct: {is_correct}, Target: {target_note})")
         return jsonify({
             'success': True,
             'is_correct': is_correct,
-            'correct_answer': target_note[0]  # Return just the note letter
+            'correct_answer': target_note[0],  # Return just the note letter
+            'points_awarded': points_awarded,
+            'total_score': session.get('score', 0),
+            'daily_quest_update': quest_update
         })
     except Exception as e:
         print(f"Error submitting answer: {str(e)}")
@@ -291,9 +613,14 @@ def quiz_results():
     session.modified = True
     
     return render_template('quiz_results.html', 
-                         score=int(score),
+                         quiz_score=int(score),
                          total_questions=total_questions,
-                         correct_answers=correct_answers)
+                         correct_answers=correct_answers,
+                         score=session.get('score', 0),
+                         current_daily_quest=session.get('current_daily_quest'),
+                         daily_quest_progress=session.get('daily_quest_progress'),
+                         daily_quest_completed=session.get('daily_quest_completed_today', False),
+                         listen_streak_count=session.get('listen_streak_count', 0))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True) 

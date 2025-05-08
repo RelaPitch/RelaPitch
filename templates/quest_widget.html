@@ -1,0 +1,57 @@
+<!-- Daily Quest Widget -->
+<div id="daily-quest-widget" class="quest-widget">
+    <h3>Daily Quest</h3>
+    <div class="quest-title">{{ current_daily_quest.description }}</div>
+    <div class="quest-progress">Progress: 
+    {% if current_daily_quest.type in ['listen_correct_count', 'sing_correct_count', 'lesson_interaction_count'] %}
+        {{ daily_quest_progress.count }}
+    {% elif current_daily_quest.type == 'listen_streak' %}
+        {{ listen_streak_count|default(0) }}
+    {% elif current_daily_quest.type == 'combined_practice' %}
+        {{ (1 if daily_quest_progress.listen_done else 0) + (1 if daily_quest_progress.sing_done else 0) }}
+    {% else %}
+        0
+    {% endif %} / 
+    {% if current_daily_quest.type == 'combined_practice' %}
+        2
+    {% else %}
+        {{ current_daily_quest.goal_value }}
+    {% endif %}
+</div>
+    <div class="quest-progress-bar-container">
+        <div class="quest-progress-bar" style="width: 
+            {% if current_daily_quest.type in ['listen_correct_count', 'sing_correct_count', 'lesson_interaction_count'] %}
+                {% set progress = daily_quest_progress.count|default(0) %}
+                {% set goal = current_daily_quest.goal_value %}
+                {% if progress > 0 and goal > 0 %}
+                    {{ (progress / goal * 100)|round }}%
+                {% else %}
+                    0%
+                {% endif %}
+            {% elif current_daily_quest.type == 'listen_streak' %}
+                {% set progress = listen_streak_count|default(0) %}
+                {% set goal = current_daily_quest.goal_value %}
+                {% if progress > 0 and goal > 0 %}
+                    {{ (progress / goal * 100)|round }}%
+                {% else %}
+                    0%
+                {% endif %}
+            {% elif current_daily_quest.type == 'combined_practice' %}
+                {% set progress = (1 if daily_quest_progress.listen_done|default(false) else 0) + (1 if daily_quest_progress.sing_done|default(false) else 0) %}
+                {{ (progress / 2 * 100)|round }}%
+            {% else %}
+                0%
+            {% endif %}
+        ">
+        </div>
+    </div>
+    <div class="quest-status {{ 'completed' if daily_quest_completed else '' }}">
+        {% if daily_quest_completed %}
+            Completed! +{{ current_daily_quest.reward_points }} points!
+        {% else %}
+            In Progress
+        {% endif %}
+    </div>
+    <!-- Hidden element with quest data for JavaScript -->
+    <div id="quest-data" class="hidden" data-quest-info='{"quest_description": "{{ current_daily_quest.description }}", "quest_progress": {{ daily_quest_progress.count if current_daily_quest.type in ["listen_correct_count", "sing_correct_count", "lesson_interaction_count"] else (daily_quest_progress.listen_streak_count if current_daily_quest.type == "listen_streak" else ((1 if daily_quest_progress.listen_done else 0) + (1 if daily_quest_progress.sing_done else 0)) if current_daily_quest.type == "combined_practice" else 0) }}, "quest_goal": {{ current_daily_quest.goal_value if current_daily_quest.type != "combined_practice" else 2 }}, "quest_completed": {{ "true" if daily_quest_completed else "false" }}, "quest_reward_points": {{ current_daily_quest.reward_points }}}' ></div>
+</div>

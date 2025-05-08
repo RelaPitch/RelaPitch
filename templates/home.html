@@ -3,6 +3,13 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+<!-- Include the Daily Quest Widget if quest data is available -->
+{% if current_daily_quest %}
+    <div class="daily-quest-container">
+        {% include 'quest_widget.html' %}
+    </div>
+{% endif %}
+
 <div class="hero">
     <h1>Welcome to RelaPitch</h1>
     <p>Master relative pitch through interactive lessons and quizzes</p>
