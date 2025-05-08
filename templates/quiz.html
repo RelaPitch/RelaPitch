@@ -24,9 +24,10 @@
                             <button id="playTarget" class="btn btn-primary">Play Target Note</button>
                             <div class="note-options mt-3">
                                 {% for note in question.options %}
-                                <button class="btn btn-outline-primary note-btn" data-note="{{ note }}">{{ note }}</button>
+                                <button class="btn btn-outline-primary note-btn" data-note="{{ note }}" data-answer="{% if note == question.target_note[0] %}correct{% else %}incorrect{% endif %}">{{ note }}</button>
                                 {% endfor %}
                             </div>
+                            <span class="score-feedback"></span>
                         </div>
                     </div>
                     {% else %}
@@ -47,6 +48,7 @@
                                 <button id="helpButton" class="btn btn-info mt-3" disabled>Show hint</button>
                             </div>
                             <button id="submitRecording" class="btn btn-success mt-3" disabled>Submit Recording</button>
+                            <span class="score-feedback"></span>
                         </div>
                     </div>
                     {% endif %}
@@ -80,4 +82,43 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <script src="{{ url_for('static', filename='js/tuner.js') }}"></script>
 <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script>
+    // Initialize scoring for the quiz
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup scoring for listen mode
+        const noteButtons = document.querySelectorAll('.note-btn');
+        noteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const isCorrect = this.dataset.answer === 'correct';
+                const feedbackSpan = this.closest('.target-note').querySelector('.score-feedback');
+                
+                if (isCorrect) {
+                    RelaPitchScoring.awardPoints(15);
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, '+15 points!');
+                    document.getElementById('nextButton').disabled = false;
+                } else {
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, 'Try again!');
+                }
+            });
+        });
+
+        // Setup scoring for sing mode
+        const submitRecording = document.getElementById('submitRecording');
+        if (submitRecording) {
+            submitRecording.addEventListener('click', function() {
+                // Assuming the tuner.js has a way to check if the note is correct
+                const isCorrect = window.checkNoteAccuracy(); // This function should be defined in tuner.js
+                const feedbackSpan = this.closest('.target-note').querySelector('.score-feedback');
+                
+                if (isCorrect) {
+                    RelaPitchScoring.awardPoints(20);
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, '+20 points!');
+                    document.getElementById('nextButton').disabled = false;
+                } else {
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, 'Try again!');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %} 

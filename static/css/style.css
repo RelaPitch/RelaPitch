@@ -802,3 +802,29 @@ footer {
 #playChromaticScale {
     margin-bottom: 1rem;
 }
+
+/* Search Form CSS */
+
+
+/* Add some basic styling for the search form */
+.search-form {
+    display: flex;
+    margin-left: auto; /* Push search form to the right */
+    padding: 0.5em;
+}
+.search-form input[type="search"] {
+    padding: 0.4em;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+.search-form button {
+    padding: 0.4em 0.8em;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+.search-form button:hover {
+    background-color: #0056b3;
+}

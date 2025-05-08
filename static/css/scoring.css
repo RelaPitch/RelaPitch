@@ -1,0 +1,164 @@
+/* Scoring System Styles */
+
+.score-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.total-score-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.score-feedback {
+    display: inline-block;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.score-feedback-active {
+    color: #27ae60;
+    font-weight: bold;
+    animation: scoreFeedback 0.5s ease-in-out;
+}
+
+@keyframes scoreFeedback {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Daily Quest Widget Styles */
+.quest-widget {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #3498db;
+}
+
+.quest-widget h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.3em;
+}
+
+.quest-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+.quest-progress {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+/* Quest-specific progress bar to avoid conflicts with lesson progress bars */
+.quest-progress-bar-container {
+    background: #e0e0e0;
+    height: 8px;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.quest-progress-bar {
+    background: #3498db;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.quest-status {
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+.quest-status.completed {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Feedback element styles */
+.feedback {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #27ae60;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+#points-feedback {
+    color: #27ae60; /* Green for positive feedback */
+}
+
+#answer-feedback {
+    margin: 10px 0;
+}
+
+.feedback.active {
+    opacity: 1;
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Quiz question styles */
+.quiz-question {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.quiz-question button {
+    margin: 5px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quiz-question button:hover {
+    background-color: #2980b9;
+}
+
+.quiz-question button[data-answer="correct"]:hover {
+    background-color: #27ae60;
+}
+
+.quiz-question button[data-answer="incorrect"]:hover {
+    background-color: #e74c3c;
+} 
