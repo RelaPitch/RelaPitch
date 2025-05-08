@@ -1,102 +1,124 @@
 {% extends "base.html" %}
 
-{% block title %}Pitch Recognition Quiz{% endblock %}
+{% block title %}Question {{ question_id }}{% endblock %}
 
 {% block content %}
-<div class="quiz-container">
-    <h1>Pitch Recognition Quiz</h1>
-    
-    <div id="startPage" class="quiz-section active">
-        <div class="start-content">
-            <h2>Welcome to the Pitch Recognition Quiz!</h2>
-            <p>This quiz will help you improve your pitch recognition skills in two modes:</p>
-            <ul>
-                <li><strong>Listen Mode:</strong> Listen to notes and identify them</li>
-                <li><strong>Sing Mode:</strong> Sing the target note after hearing the reference note</li>
-            </ul>
-            <p>Are you ready to begin?</p>
-            <button id="startQuiz" class="btn large">Start Quiz</button>
-        </div>
-    </div>
-    
-    <div class="quiz-controls" style="display: none;">
-        <div class="score-display">
-            <h3>Score: <span id="score">0</span></h3>
-        </div>
-
-        <div class="quiz-mode">
-            <button id="listenMode" class="btn active">Listen Mode</button>
-            <button id="singMode" class="btn">Sing Mode</button>
-        </div>
-
-        <div id="listenSection" class="quiz-section">
-            <div class="reference-note">
-                <h3>Reference Note</h3>
-                <div class="note-selection">
-                    <button class="note-select-btn" data-note="C4">C</button>
-                    <button class="note-select-btn" data-note="D4">D</button>
-                    <button class="note-select-btn" data-note="E4">E</button>
-                    <button class="note-select-btn" data-note="F4">F</button>
-                    <button class="note-select-btn" data-note="G4">G</button>
-                    <button class="note-select-btn" data-note="A4">A</button>
-                    <button class="note-select-btn" data-note="B4">B</button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center mb-0">Question {{ question_id }} of {{ total_questions }}</h2>
                 </div>
-                <button id="playReference" class="btn large">Play Reference Note</button>
-                <div id="referenceNoteDisplay"></div>
-            </div>
+                <div class="card-body">
+                    {% if question.type == 'listen' %}
+                    <div class="listen-section">
+                        <h3>Listen Mode</h3>
+                        <div class="reference-note mb-4">
+                            <h4>Reference Note: {{ question.reference_note[0] }}</h4>
+                            <button id="playReference" class="btn btn-primary">Play Reference Note</button>
+                        </div>
 
-            <div class="guess-note">
-                <h3>Guess Note</h3>
-                <button id="playGuess" class="btn large">Play Guess Note</button>
-                <div class="note-options">
-                    <button class="note-btn" data-note="C">C</button>
-                    <button class="note-btn" data-note="D">D</button>
-                    <button class="note-btn" data-note="E">E</button>
-                    <button class="note-btn" data-note="F">F</button>
-                    <button class="note-btn" data-note="G">G</button>
-                    <button class="note-btn" data-note="A">A</button>
-                    <button class="note-btn" data-note="B">B</button>
-                </div>
-                <button id="skipListen" class="btn skip">Skip Question</button>
-            </div>
-        </div>
+                        <div class="target-note mb-4">
+                            <h4>Target Note</h4>
+                            <button id="playTarget" class="btn btn-primary">Play Target Note</button>
+                            <div class="note-options mt-3">
+                                {% for note in question.options %}
+                                <button class="btn btn-outline-primary note-btn" data-note="{{ note }}" data-answer="{% if note == question.target_note[0] %}correct{% else %}incorrect{% endif %}">{{ note }}</button>
+                                {% endfor %}
+                            </div>
+                            <span class="score-feedback"></span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="sing-section">
+                        <h3>Sing Mode</h3>
+                        <div class="reference-note mb-4">
+                            <h4>Reference Note: {{ question.reference_note[0] }}</h4>
+                            <button id="playReferenceSing" class="btn btn-primary">Play Reference Note</button>
+                        </div>
 
-        <div id="singSection" class="quiz-section">
-            <div class="reference-note">
-                <h3>Reference Note</h3>
-                <div class="note-selection">
-                    <button class="note-select-btn" data-note="C4">C</button>
-                    <button class="note-select-btn" data-note="D4">D</button>
-                    <button class="note-select-btn" data-note="E4">E</button>
-                    <button class="note-select-btn" data-note="F4">F</button>
-                    <button class="note-select-btn" data-note="G4">G</button>
-                    <button class="note-select-btn" data-note="A4">A</button>
-                    <button class="note-select-btn" data-note="B4">B</button>
-                </div>
-                <button id="playReferenceSing" class="btn large">Play Reference Note</button>
-                <div id="referenceNoteDisplaySing"></div>
-            </div>
+                        <div class="target-note mb-4">
+                            <h4>Target Note: {{ question.target_note[0] }}</h4>
+                            <button id="startTuner" class="btn btn-primary">Start Recording</button>
+                            <div id="tunerDisplay" class="mt-3">
+                                <div id="pitch"></div>
+                                <div id="note"></div>
+                                <canvas id="tunerCanvas"></canvas>
+                                <button id="helpButton" class="btn btn-info mt-3" disabled>Show hint</button>
+                            </div>
+                            <button id="submitRecording" class="btn btn-success mt-3" disabled>Submit Recording</button>
+                            <span class="score-feedback"></span>
+                        </div>
+                    </div>
+                    {% endif %}
 
-            <div class="guess-note">
-                <h3>Target Note: <span id="targetNoteDisplay"></span></h3>
-                <button id="startTuner" class="btn large">Start Recording</button>
-                <div id="tunerDisplay">
-                    <div id="pitch"></div>
-                    <div id="note"></div>
-                    <canvas id="tunerCanvas"></canvas>
+                    <div class="navigation-buttons text-center mt-4">
+                        {% if question_id < total_questions %}
+                        <button class="btn btn-primary" id="nextButton" disabled data-next-url="{{ url_for('quiz', question_id=question_id+1) }}">Next</button>
+                        {% else %}
+                        <button class="btn btn-success" id="finishButton" disabled data-finish-url="{{ url_for('quiz_results') }}">Finish Quiz</button>
+                        {% endif %}
+                    </div>
                 </div>
-                <button id="submitRecording" class="btn large" disabled>Submit Recording</button>
-                <button id="skipSing" class="btn skip">Skip Question</button>
             </div>
         </div>
-
-        <div id="feedbackDisplay" class="feedback-container"></div>
     </div>
 </div>
+
+<!-- Pass question data to JavaScript -->
+<script type="application/json" id="questionData">
+{
+    "id": {{ question_id }},
+    "type": "{{ question.type }}",
+    "reference_note": "{{ question.reference_note }}",
+    "target_note": "{{ question.target_note }}",
+    "options": {{ question.options|tojson }}
+}
+</script>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <script src="{{ url_for('static', filename='js/tuner.js') }}"></script>
 <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+<script>
+    // Initialize scoring for the quiz
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup scoring for listen mode
+        const noteButtons = document.querySelectorAll('.note-btn');
+        noteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const isCorrect = this.dataset.answer === 'correct';
+                const feedbackSpan = this.closest('.target-note').querySelector('.score-feedback');
+                
+                if (isCorrect) {
+                    RelaPitchScoring.awardPoints(15);
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, '+15 points!');
+                    document.getElementById('nextButton').disabled = false;
+                } else {
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, 'Try again!');
+                }
+            });
+        });
+
+        // Setup scoring for sing mode
+        const submitRecording = document.getElementById('submitRecording');
+        if (submitRecording) {
+            submitRecording.addEventListener('click', function() {
+                // Assuming the tuner.js has a way to check if the note is correct
+                const isCorrect = window.checkNoteAccuracy(); // This function should be defined in tuner.js
+                const feedbackSpan = this.closest('.target-note').querySelector('.score-feedback');
+                
+                if (isCorrect) {
+                    RelaPitchScoring.awardPoints(20);
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, '+20 points!');
+                    document.getElementById('nextButton').disabled = false;
+                } else {
+                    RelaPitchScoring.showTemporaryFeedback(feedbackSpan, 'Try again!');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %} 

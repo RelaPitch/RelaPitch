@@ -4,15 +4,36 @@
 
 {% block content %}
 <div class="lesson-container">
-    <h1>{{ lesson.title }}</h1>
-    
-    <div class="lesson-content">
-        {{ lesson.content | safe }}
+    <div class="lesson-header">
+        <div class="lesson-progress-container">
+            <div class="progress-bar">
+                <div class="progress progress-lesson-{{ lesson_id }}"></div>
+            </div>
+            <div class="progress-dropdown">
+                <button class="progress-text-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lesson-menu">
+                    Lesson {{ lesson_id }} of 6 <span class="arrow">▼</span>
+                </button>
+                <div class="dropdown-content" id="lesson-menu" role="menu">
+                    {% for i in range(1, 7) %}
+                    <a href="{{ url_for('lesson', lesson_id=i) }}" {% if i == lesson_id %}class="active"{% endif %}>
+                        Lesson {{ i }}: {% if i == 1 %}Introduction to Notes
+                        {% elif i == 2 %}Understanding Steps in Music
+                        {% elif i == 3 %}Introduction to Relative Pitch
+                        {% elif i == 4 %}Identifying Higher Notes
+                        {% elif i == 5 %}Identifying Lower Notes
+                        {% else %}Recreating Notes (Singing/Humming)
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
+    <h1>{{ lesson.title }}</h1>
 
     {% if lesson.keyboard %}
     <div class="keyboard-container">
-        <h2 class="keyboard-header">Interactive Keyboard</h2>
+        <h4 class="keyboard-header">Interactive Keyboard</h4>
         <div id="piano">
             <!-- White keys -->
             <div class="white" data-note="C4">
@@ -42,25 +63,68 @@
 
             <!-- Black keys -->
             <div class="black" data-note="C#4" style="left: 45px;">
-                <span class="note-name">C#<br>Db</span>
+                <span class="note-name">C#<br>D♭</span>
             </div>
             <div class="black" data-note="D#4" style="left: 105px;">
-                <span class="note-name">D#<br>Eb</span>
+                <span class="note-name">D#<br>E♭</span>
             </div>
             <div class="black" data-note="F#4" style="left: 225px;">
-                <span class="note-name">F#<br>Gb</span>
+                <span class="note-name">F#<br>G♭</span>
             </div>
             <div class="black" data-note="G#4" style="left: 285px;">
-                <span class="note-name">G#<br>Ab</span>
+                <span class="note-name">G#<br>A♭</span>
             </div>
             <div class="black" data-note="A#4" style="left: 345px;">
-                <span class="note-name">A#<br>Bb</span>
+                <span class="note-name">A#<br>B♭</span>
             </div>
         </div>
         <div class="keyboard-controls">
-            <button id="playScale" class="btn">Play Scale</button>
-            <button id="playRandomNote" class="btn">Play Random Note</button>
+            
         </div>
+    </div>
+    {% endif %}
+    
+    <div class="lesson-content">
+        {{ lesson.content | safe }}
+    </div>
+
+    {% if lesson_id == 4 or lesson_id == 5 %}
+    <div class="drag-drop-exercise">
+        <h2>Practice Exercise</h2>
+        <div class="exercise-description">
+            <p>Given a reference note and a guess note, drag and drop the notes you would focus on to identify the guess note.</p>
+            <div class="reference-info">
+                <p>Reference Note: <span id="referenceNote"></span></p>
+                {% if lesson_id == 4 %}
+                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds higher)</p>
+                {% else %}
+                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds lower)</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="drag-drop-container">
+            <div class="available-notes">
+                <h3>Available Notes</h3>
+                <div class="notes-list" id="availableNotes">
+                    <!-- Notes will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="selected-notes">
+                <h3>Notes to Focus On</h3>
+                <div class="notes-list" id="selectedNotes">
+                    <!-- Selected notes will appear here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="exercise-controls">
+            <button id="checkAnswer" class="btn">Check Answer</button>
+            <button id="resetExercise" class="btn">Reset</button>
+        </div>
+        
+        <div id="feedback" class="feedback"></div>
     </div>
     {% endif %}
 
@@ -69,7 +133,7 @@
         <a href="{{ url_for('lesson', lesson_id=lesson_id-1) }}" class="btn">Previous Lesson</a>
         {% endif %}
         
-        {% if lesson_id < 3 %}
+        {% if lesson_id < 6 %}
         <a href="{{ url_for('lesson', lesson_id=lesson_id+1) }}" class="btn">Next Lesson</a>
         {% endif %}
     </div>
@@ -79,4 +143,6 @@
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 <script src="{{ url_for('static', filename='js/lesson.js') }}"></script>
-{% endblock %} 
+<script src="{{ url_for('static', filename='js/tuner.js') }}"></script>
+<script src="{{ url_for('static', filename='js/drag-drop.js') }}"></script>
+{% endblock %}

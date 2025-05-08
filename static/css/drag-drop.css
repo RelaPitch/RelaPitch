@@ -1,0 +1,85 @@
+.drag-drop-exercise {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.exercise-description {
+    margin-bottom: 1.5rem;
+}
+
+.reference-info {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.drag-drop-container {
+    display: flex;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.available-notes,
+.selected-notes {
+    flex: 1;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.notes-list {
+    min-height: 200px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.note-item {
+    padding: 0.5rem 1rem;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    cursor: move;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.note-item:hover {
+    background-color: #dee2e6;
+}
+
+.note-item.dragging {
+    opacity: 0.5;
+}
+
+.exercise-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.feedback {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    display: none;
+}
+
+.feedback.correct {
+    background-color: #d4edda;
+    color: #155724;
+    display: block;
+}
+
+.feedback.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+    display: block;
+} 

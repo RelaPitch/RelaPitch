@@ -1,9 +1,9 @@
 /* Global Styles */
 :root {
-    --primary-color: #2c3e50;
+    --primary-color: #ebebed;
     --secondary-color: #3498db;
     --accent-color: #e74c3c;
-    --background-color: #ecf0f1;
+    --background-color: #89c8f0;
     --text-color: #2c3e50;
 }
 
@@ -14,7 +14,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Playfair Display';
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--background-color);
@@ -56,7 +56,6 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
 }
 
 /* Hero Section */
@@ -193,7 +192,7 @@ body {
 
 .note-btn {
     padding: 1rem;
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -202,7 +201,7 @@ body {
 }
 
 .note-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 #tunerDisplay {
@@ -239,6 +238,123 @@ body {
     padding: 2rem;
     border-radius: 10px;
 }
+
+.lesson-header {
+    margin-bottom: 2rem;
+}
+
+.lesson-progress-container {
+    position: relative;
+}
+
+.progress-dropdown {
+    position: relative;
+    margin-top: 0.5rem;
+}
+
+.progress-text-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: #6c757d;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-text-btn .arrow {
+    font-size: 0.8rem;
+    margin-left: 0.5em;
+    transition: transform 0.3s ease;
+}
+
+.progress-text-btn:hover {
+    color: #007bff;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    margin-top: 0.2rem;
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translate(-50%, -10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-content.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%);
+}
+
+.progress-text-btn[aria-expanded="true"] .arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 0.8rem 1.2rem;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-content a.active {
+    background-color: #e9ecef;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Progress width for each lesson */
+.progress-lesson-1 { width: 16.67%; }
+.progress-lesson-2 { width: 33.33%; }
+.progress-lesson-3 { width: 50%; }
+.progress-lesson-4 { width: 66.67%; }
+.progress-lesson-5 { width: 83.33%; }
+.progress-lesson-6 { width: 100%; }
 
 .lesson-content {
     margin: 2rem 0;
@@ -493,7 +609,6 @@ footer {
 
 .lesson-navigation {
     display: flex;
-    justify-content: space-between;
     margin-top: 2rem;
 }
 
@@ -504,6 +619,10 @@ footer {
     text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.2s;
+}
+
+.lesson-navigation a:last-child {
+    margin-left: auto;
 }
 
 .lesson-navigation a:hover {
@@ -585,4 +704,185 @@ footer {
 .score-display #score {
     font-weight: bold;
     font-size: 1.4rem;
-} 
+}
+
+/* Quiz Mode Selection Styles */
+.mode-selection {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+}
+
+.mode-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.mode-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #3498db;
+}
+
+.mode-card h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.mode-card p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.mode-card .btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    background-color: #3498db;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    min-width: 180px;
+}
+
+.mode-card .btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+.container h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin: 2rem 0;
+    font-size: 2.5rem;
+}
+
+.container .btn.secondary {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.8rem 2rem;
+    background-color: #95a5a6;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    max-width: 200px;
+}
+
+.container .btn.secondary:hover {
+    background-color: #7f8c8d;
+    transform: scale(1.05);
+}
+
+#playScale {
+    margin-bottom: 1rem;
+}
+
+#playOctave {
+    margin-bottom: 1rem;
+}
+
+#playChromaticScale {
+    margin-bottom: 1rem;
+}
+
+#playHalfStep1 {
+    margin-bottom: 1rem;
+}
+#playHalfStep2 {
+    margin-bottom: 1rem;
+}
+#playHalfStep3 {
+    margin-bottom: 1rem;
+}
+#playHalfStep4 {
+    margin-bottom: 1rem;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.quiz-ask {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.quiz-btn {
+    display: inline-block;
+    width: 150px;
+    background-color: #4CAF50; /* green */
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.review-btn {
+    display: inline-block;
+    width: 165px;
+    background-color: #ddd; /* light grey */
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    align-items: center;
+}
+
+.halfstep-item {
+    display: flex;
+    align-items: center;
+}
+
+.halfstep-item button {
+    margin-left: 15px;
+    margin-bottom: 1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Search Form CSS */
+
+
+/* Add some basic styling for the search form */
+.search-form {
+    display: flex;
+    margin-left: auto; /* Push search form to the right */
+    padding: 0.5em;
+}
+.search-form input[type="search"] {
+    padding: 0.4em;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+}
+.search-form button {
+    padding: 0.4em 0.8em;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+.search-form button:hover {
+    background-color: #0056b3;
+}
