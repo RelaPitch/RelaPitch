@@ -54,25 +54,32 @@ LESSONS = {
         <h2>Diatonic Scale</h2>
         <p>In music theory, the diatonic scale consists of 7 notes (in one octave): C, D, E, F, G, A, B. These are the white keys shown on the piano.</p>
         <p>For simplicity, let's just focus on the C major scale, which consists of the notes in the order: C, D, E, F, G, A, B, C. Click on the Play Scale button to hear each note.</p>
-        <button id="playScale" class="btn">Play Scale</button>
-        
+        <button id="playScale" class="btn">Play Scale</button>""",
+        "keyboard": True
+    },
+    2: {
+        "title": "What is an Octave?",
+        "content": """
         <h2>What is an Octave?</h2>
         <p>An octave is the distance from one note to another that has double its frequency. In other words, the two notes sound the same but one is simply higher/lower in pitch than the other.</p>
         <p>Examples: C to C, E to E, A to A, etc.</p>
         <p>Click on the Play Octave button to hear an example of an octave, C to C.</p>
-        <button id="playOctave" class="btn">Play Octave</button>
-
+        <button id="playOctave" class="btn">Play Octave</button>""",
+        "keyboard": True
+    },
+    3: {
+        "title": "Chromatic Scale",
+        "content": """
         <h2>Chromatic Scale</h2>
         <p>The black keys combine with the white keys to form the chromatic scale, which consists of 12 notes:</p>
         <p>C, C# or D♭, D, D# or E♭, E, F, F# or G♭, G, G# or A♭, A, A# or B♭, B</p>
         <p>Notice how some of these notes have 2 different names (such as C# and D♭). These notes are called enharmonic equivalents.</p>
         <p>Enharmonic equivalents are two notes that sound the same but have different spellings.
         <p>Click on the Play Chromatic Scale button to hear each note.</p>
-        <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>
-        """,
+        <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>""",
         "keyboard": True
     },
-    2: {
+    4: {
         "title": "Understanding Steps in Music",
         "content": """
         <h2>Half Steps</h2>
@@ -100,7 +107,7 @@ LESSONS = {
         """,
         "keyboard": True
     },
-    3: {
+    5: {
         "title": "Introduction to Relative Pitch",
         "content": """
         <h2>What is Relative Pitch?</h2>
@@ -124,7 +131,7 @@ LESSONS = {
         """,
         "keyboard": True
     },
-    4: {
+    6: {
         "title": "Identifying Higher Notes",
         "content": """
         <p>If you are hearing the guess note, try to determine if it is higher or lower in pitch relative to the reference pitch.</p>
@@ -134,7 +141,7 @@ LESSONS = {
         """,
         "keyboard": True
     },
-    5: {
+    7: {
         "title": "Identifying Lower Notes",
         "content": """
         <p>If it is lower, try the same approach: identify the notes that are lower than your reference note (before you reach the octave).</p>
@@ -143,7 +150,7 @@ LESSONS = {
         """,
         "keyboard": True
     },
-    6: {
+    8: {
         "title": "Recreating Notes (Singing)",
         "content": """
         <p>If you are recreating the guess note, it is up to you whether you want to go higher or lower.</p>
