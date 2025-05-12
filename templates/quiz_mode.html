@@ -7,9 +7,18 @@
     <h1 class="text-center mb-4">Choose Your Quiz Mode</h1>
     
     <div class="row justify-content-center mb-4">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <div class="reference-note-selection text-center">
                 <h3>Select Reference Note</h3>
+                <div class="alert alert-info mb-3">
+                    <p><strong>What is a Reference Note?</strong></p>
+                    <p>The reference note is the starting point for your ear training. It serves as a foundation that helps you identify or sing other notes during the quiz.</p>
+                    <ul class="text-start">
+                        <li>Choose a note that's comfortable for you to hear or sing</li>
+                        <li>This note will play first in each quiz question</li>
+                        <li>You'll then identify or sing other notes in relation to this reference note</li>
+                    </ul>
+                </div>
                 <select id="referenceNote" class="form-select">
                     <option value="C4">C</option>
                     <option value="D4">D</option>
@@ -23,16 +32,20 @@
         </div>
     </div>
 
-    <div class="mode-selection">
-        <div class="mode-card">
-            <h2>Listen Mode</h2>
-            <p>Test your ability to identify notes by listening to them.</p>
-            <a href="#" class="btn" onclick="startQuiz('listen')">Start Listen Mode</a>
-        </div>
-        <div class="mode-card">
-            <h2>Sing Mode</h2>
-            <p>Test your ability to sing notes accurately.</p>
-            <a href="#" class="btn" onclick="startQuiz('sing')">Start Sing Mode</a>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-10">
+            <div class="mode-selection d-flex justify-content-around">
+                <div class="mode-card p-4 text-center" style="width: 45%">
+                    <h2>Listen Mode</h2>
+                    <p>Test your ability to identify notes by listening to them.</p>
+                    <a href="#" class="btn btn-primary btn-lg" onclick="startQuiz('listen')">Start Listen Mode</a>
+                </div>
+                <div class="mode-card p-4 text-center" style="width: 45%">
+                    <h2>Sing Mode</h2>
+                    <p>Test your ability to sing notes accurately.</p>
+                    <a href="#" class="btn btn-primary btn-lg" onclick="startQuiz('sing')">Start Sing Mode</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="text-center mt-4">

@@ -14,14 +14,27 @@
                     {% if question.type == 'listen' %}
                     <div class="listen-section">
                         <h3>Listen Mode</h3>
+                        {% if question_id == 1 %}
+                        <div class="instructions alert alert-info mb-4">
+                            <h4 class="alert-heading">👂 How to Complete This Quiz:</h4>
+                            <ol>
+                                <li><strong>STEP 1:</strong> Listen to the reference note by clicking the "Play Reference Note" button below</li>
+                                <li><strong>STEP 2:</strong> Listen to the target note by clicking the "Play Target Note" button</li>
+                                <li><strong>STEP 3:</strong> Select which note you think the target note is from the options below</li>
+                            </ol>
+                        </div>
+                        {% endif %}
+                        
                         <div class="reference-note mb-4">
-                            <h4>Reference Note: {{ question.reference_note[0] }}</h4>
-                            <button id="playReference" class="btn btn-primary">Play Reference Note</button>
+                            <h4>STEP 1: Reference Note ({{ question.reference_note[0] }})</h4>
+                            <button id="playReference" class="btn btn-primary btn-lg">Play Reference Note</button>
                         </div>
 
                         <div class="target-note mb-4">
-                            <h4>Target Note</h4>
-                            <button id="playTarget" class="btn btn-primary">Play Target Note</button>
+                            <h4>STEP 2: Listen to Target Note</h4>
+                            <button id="playTarget" class="btn btn-primary btn-lg">Play Target Note</button>
+                            
+                            <h4 class="mt-4">STEP 3: Select What You Think The Target Note Is:</h4>
                             <div class="note-options mt-3">
                                 {% for note in question.options %}
                                 <button class="btn btn-outline-primary note-btn" data-note="{{ note }}" data-answer="{% if note == question.target_note[0] %}correct{% else %}incorrect{% endif %}">{{ note }}</button>
@@ -33,21 +46,38 @@
                     {% else %}
                     <div class="sing-section">
                         <h3>Sing Mode</h3>
+                        {% if question_id == 1 %}
+                        <div class="instructions alert alert-info mb-4">
+                            <h4 class="alert-heading">🎤 How to Complete This Quiz:</h4>
+                            <ol>
+                                <li><strong>STEP 1:</strong> Listen to the reference note by clicking the "Play Reference Note" button below</li>
+                                <li><strong>STEP 2:</strong> Look at your target note that you'll need to sing</li>
+                                <li><strong>STEP 3:</strong> Click "Start Recording" and sing the target note</li>
+                                <li><strong>STEP 4:</strong> Click "Submit Recording" when you're done</li>
+                            </ol>
+                        </div>
+                        {% endif %}
+                        
                         <div class="reference-note mb-4">
-                            <h4>Reference Note: {{ question.reference_note[0] }}</h4>
-                            <button id="playReferenceSing" class="btn btn-primary">Play Reference Note</button>
+                            <h4>STEP 1: Reference Note ({{ question.reference_note[0] }})</h4>
+                            <button id="playReferenceSing" class="btn btn-primary btn-lg">Play Reference Note</button>
                         </div>
 
                         <div class="target-note mb-4">
-                            <h4>Target Note: {{ question.target_note[0] }}</h4>
-                            <button id="startTuner" class="btn btn-primary">Start Recording</button>
+                            <h4>STEP 2: Your Target Note Is: {{ question.target_note[0] }}</h4>
+                            <p class="alert alert-warning">You need to <strong>sing this note</strong> after clicking the Start Recording button.</p>
+                            
+                            <h4 class="mt-4">STEP 3: Record Your Singing</h4>
+                            <button id="startTuner" class="btn btn-primary btn-lg">Start Recording</button>
                             <div id="tunerDisplay" class="mt-3">
                                 <div id="pitch"></div>
                                 <div id="note"></div>
                                 <canvas id="tunerCanvas"></canvas>
                                 <button id="helpButton" class="btn btn-info mt-3" disabled>Show hint</button>
                             </div>
-                            <button id="submitRecording" class="btn btn-success mt-3" disabled>Submit Recording</button>
+                            
+                            <h4 class="mt-4">STEP 4: Submit Your Answer</h4>
+                            <button id="submitRecording" class="btn btn-success btn-lg mt-3" disabled>Submit Recording</button>
                             <span class="score-feedback"></span>
                         </div>
                     </div>
