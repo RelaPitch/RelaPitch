@@ -11,19 +11,21 @@
             </div>
             <div class="progress-dropdown">
                 <button class="progress-text-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lesson-menu">
-                    Lesson {{ lesson_id }} of 8 <span class="arrow">▼</span>
+                    Lesson {{ lesson_id }} of 10 <span class="arrow">▼</span>
                 </button>
                 <div class="dropdown-content" id="lesson-menu" role="menu">
-                    {% for i in range(1, 9) %}
+                    {% for i in range(1, 11) %}
                     <a href="{{ url_for('lesson', lesson_id=i) }}" {% if i == lesson_id %}class="active"{% endif %}>
-                        Lesson {{ i }}: {% if i == 1 %}Introduction to Notes
-                        {% elif i == 2 %}What is an Octave?
-                        {% elif i == 3 %}What is a Chromatic Scale?
-                        {% elif i == 4 %}Understanding Steps in Music
-                        {% elif i == 5 %}Introduction to Relative Pitch
-                        {% elif i == 6 %}Identifying Higher Notes
-                        {% elif i == 7 %}Identifying Lower Notes
-                        {% else %}Recreating Notes (Singing/Humming)
+                        Lesson {{ i }}: {% if i == 1 %}Introduction to Relative Pitch
+                        {% elif i == 2 %}What is a Diatonic Scale?
+                        {% elif i == 3 %}What is an Octave?
+                        {% elif i == 4 %}What is a Chromatic Scale?
+                        {% elif i == 5 %}Understanding Steps in Music
+                        {% elif i == 6 %}Understanding Whole Steps
+                        {% elif i == 7 %}Identifying Higher Notes
+                        {% elif i == 8 %}Identifying Lower Notes
+                        {% elif i == 9 %}Recreating Notes (Singing/Humming)
+                        {% elif i == 10 %}More Tips on Recreating Notes
                         {% endif %}
                     </a>
                     {% endfor %}
@@ -90,17 +92,17 @@
         {{ lesson.content | safe }}
     </div>
 
-    {% if lesson_id == 6 or lesson_id == 7 %}
+    {% if lesson_id == 7 or lesson_id == 8 %}
     <div class="drag-drop-exercise">
         <h2>Practice Exercise</h2>
         <div class="exercise-description">
             <p>Given a reference note and a guess note, drag and drop the notes you would focus on to identify the guess note.</p>
             <div class="reference-info">
                 <p>Reference Note: <span id="referenceNote"></span></p>
-                {% if lesson_id == 6 %}
-                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds higher)</p>
+                {% if lesson_id == 7 %}
+                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds <span class='bold'>higher</span>)</p>
                 {% else %}
-                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds lower)</p>
+                    <p id="guessText">Guess Note: <span id="guessNote"></span> (sounds <span class='bold'>lower</span>)</p>
                 {% endif %}
             </div>
         </div>
@@ -135,7 +137,7 @@
         <a href="{{ url_for('lesson', lesson_id=lesson_id-1) }}" class="btn">Previous Lesson</a>
         {% endif %}
         
-        {% if lesson_id < 8 %}
+        {% if lesson_id < 10 %}
         <a href="{{ url_for('lesson', lesson_id=lesson_id+1) }}" class="btn">Next Lesson</a>
         {% endif %}
     </div>

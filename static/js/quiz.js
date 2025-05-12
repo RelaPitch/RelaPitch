@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         try {
             console.log("Playing note:", note);
-            sampler.triggerAttackRelease(note, "1s");
+            sampler.triggerAttackRelease(note, "2s");
         } catch (error) {
             console.error("Error playing note:", error);
         }

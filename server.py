@@ -49,75 +49,104 @@ AVAILABLE_DAILY_QUESTS = [
 # Lesson content (this would typically come from a database)
 LESSONS = {
     1: {
-        "title": "Introduction to Notes",
-        "content": """
-        <h2>Diatonic Scale</h2>
-        <p>In music theory, the diatonic scale consists of 7 notes (in one octave): C, D, E, F, G, A, B. These are the white keys shown on the piano.</p>
-        <p>For simplicity, let's just focus on the C major scale, which consists of the notes in the order: C, D, E, F, G, A, B, C. Click on the Play Scale button to hear each note.</p>
-        <button id="playScale" class="btn">Play Scale</button>""",
-        "keyboard": True
-    },
-    2: {
-        "title": "What is an Octave?",
-        "content": """
-        <h2>What is an Octave?</h2>
-        <p>An octave is the distance from one note to another that has double its frequency. In other words, the two notes sound the same but one is simply higher/lower in pitch than the other.</p>
-        <p>Examples: C to C, E to E, A to A, etc.</p>
-        <p>Click on the Play Octave button to hear an example of an octave, C to C.</p>
-        <button id="playOctave" class="btn">Play Octave</button>""",
-        "keyboard": True
-    },
-    3: {
-        "title": "Chromatic Scale",
-        "content": """
-        <h2>Chromatic Scale</h2>
-        <p>The black keys combine with the white keys to form the chromatic scale, which consists of 12 notes:</p>
-        <p>C, C# or D♭, D, D# or E♭, E, F, F# or G♭, G, G# or A♭, A, A# or B♭, B</p>
-        <p>Notice how some of these notes have 2 different names (such as C# and D♭). These notes are called enharmonic equivalents.</p>
-        <p>Enharmonic equivalents are two notes that sound the same but have different spellings.
-        <p>Click on the Play Chromatic Scale button to hear each note.</p>
-        <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>""",
-        "keyboard": True
-    },
-    4: {
-        "title": "Understanding Steps in Music",
-        "content": """
-        <h2>Half Steps</h2>
-        <p>A half step is the distance between two adjacent keys on a keyboard.</p>
-        <ul>
-            <li>Notes can either be sharp (#) meaning the note is raised one half step, or flat (♭) meaning the note is lowered one half step.</li>
-            <li>Sharp (#) example: If you started on D and you wanted D#, you would move up one half step.</li>
-            <li>Flat (♭) example: If you started on A and you wanted A♭, you would move down one half step.</li>
-        </ul>
-        <p>Examples of half steps:</p>
-        <ul>
-            <li class="halfstep-item">C to C#<button id="playHalfStep1" class="btn">Play Example</button></li>
-            <li class="halfstep-item">E to F<button id="playHalfStep2" class="btn">Play Example</button></li>
-            <li class="halfstep-item">A# to A<button id="playHalfStep3" class="btn">Play Example</button></li>
-        </ul>
-        
-        <h2>Whole Steps</h2>
-        <p>A whole step is made of two half steps.</p>
-        <p>Examples of whole steps:</p>
-        <ul>
-            <li class="halfstep-item">C to D<button id="playWholeStep1" class="btn">Play Example</button></li>
-            <li class="halfstep-item">A to G<button id="playWholeStep2" class="btn">Play Example</button></li>
-            <li class="halfstep-item">F# to E<button id="playWholeStep3" class="btn">Play Example</button></li>
-        </ul>
-        """,
-        "keyboard": True
-    },
-    5: {
         "title": "Introduction to Relative Pitch",
         "content": """
         <h2>What is Relative Pitch?</h2>
         <p>This app will help you to learn relative pitch or develop it further if you have some background.</p>
-        <p>Relative pitch refers to the ability to identify or reproduce the pitch of a note in relation to another note.</p>
-        <p>You will be given a reference note, and then keeping the pitch of this reference note in mind, will either identify a second note by hearing it or will reproduce it by using your mic.</p>
-        
-        <h2>Practicing Singing/Humming</h2>
-        <p>After hearing the reference pitch, try to establish the connection between the pitch and the note name. You could try playing the note on the piano and humming along to the note to reinforce the pitch. It will be important to keep this in mind for the future.</p>
-        <p>For exercise, try first playing any of the white keys, keeping in mind the note name, and hum along with the piano until you match in pitch. After some time, see if you can recreate the same pitch without using the piano for reference.</p>
+        <p>Relative pitch refers to the ability to <span class='bold'>identify or reproduce the pitch</span> of a note <span class='bold'>in relation to another note.</span></p>
+        <p>You will be given a <span class='bold'>reference note</span>, and then keeping the pitch of this reference note in mind, will either identify a second note by hearing it or will reproduce it by using your mic.</p>""",
+        "keyboard": False
+    },
+    2: {
+        "title": "Introduction to Notes",
+        "content": """
+        <h2>Diatonic Scale</h2>
+        <p>In music theory, the <span class='bold'>diatonic scale</span> consists of 7 notes (in one octave): <span class='bold'>C, D, E, F, G, A, B.</span> These are the white keys shown on the piano.</p>
+        <p>For simplicity, let's just focus on the <span class='bold'>C major scale</span>, which consists of the notes in the order: C, D, E, F, G, A, B, C. Click on the<span class='bold'> Play Scale button</span> to hear each note.</p>
+        <button id="playScale" class="btn">Play Scale</button>""",
+        "keyboard": True
+    },
+    3: {
+        "title": "What is an Octave?",
+        "content": """
+        <h2>What is an Octave?</h2>
+        <p>An <span class='bold'>octave</span> is the distance from one note to another that has double its frequency. In other words, the two notes sound the same but one is simply higher/lower in pitch than the other.</p>
+        <p>Examples: C to C, E to E, A to A, etc.</p>
+        <p>Click on the <span class='bold'>Play Octave button</span> to hear an example of an octave, C to C.</p>
+        <button id="playOctave" class="btn">Play Octave</button>""",
+        "keyboard": True
+    },
+    4: {
+        "title": "What is a Chromatic Scale?",
+        "content": """
+        <h2>Chromatic Scale</h2>
+        <p>The black keys combine with the white keys to form the <span class='bold'>chromatic scale</span>, which consists of 12 notes:</p>
+        <p>C, C# or D♭, D, D# or E♭, E, F, F# or G♭, G, G# or A♭, A, A# or B♭, B</p>
+        <p>Notice how some of these notes have 2 different names (such as C# and D♭). These notes are called <span class='bold'>enharmonic equivalents</span>.</p>
+        <p><span class='bold'>Enharmonic equivalents</span> are two notes that sound the same but have different spellings.
+        <p>Click on the <span class='bold'>Play Chromatic Scale button</span> to hear each note.</p>
+        <button id="playChromaticScale" class="btn">Play Chromatic Scale</button>""",
+        "keyboard": True
+    },
+    5: {
+        "title": "Understanding Steps in Music",
+        "content": """
+        <h2>Half Steps</h2>
+        <p>A <span class='bold'>half step</span> is the distance between two adjacent keys on a keyboard.</p>
+        <ul>
+            <li>Notes can either be <span class='bold'>sharp (#)</span> meaning the note is raised one half step, or <span class='bold'>flat (♭)</span> meaning the note is lowered one half step.</li>
+            <li>Sharp (#) example: If you started on D and you wanted D#, you would move up one half step.</li>
+            <li>Flat (♭) example: If you started on A and you wanted A♭, you would move down one half step.</li>
+        </ul>
+        <p>Examples of half steps:</p>
+        <div class="halfstep-examples">
+            <div class="halfstep-item">C to C#<button id="playHalfStep1" class="btn">Play Example</button></div>
+            <div class="halfstep-item">E to F<button id="playHalfStep2" class="btn">Play Example</button></div>
+            <div class="halfstep-item">A# to A<button id="playHalfStep3" class="btn">Play Example</button></div>
+        </div>
+        """,
+        "keyboard": True
+    },
+    6: {
+        "title": "Understanding Whole Steps",
+        "content": """
+        <h2>Whole Steps</h2>
+        <p>A <span class='bold'>whole step</span> is made of two half steps.</p>
+        <p>Examples of whole steps:</p>
+        <div class="halfstep-examples">
+            <div class="halfstep-item">C to D<button id="playWholeStep1" class="btn">Play Example</button></div>
+            <div class="halfstep-item">A to G<button id="playWholeStep2" class="btn">Play Example</button></div>
+            <div class="halfstep-item">F# to E<button id="playWholeStep3" class="btn">Play Example</button></div>
+        </div>
+        """,
+        "keyboard": True
+    },
+    7: {
+        "title": "Identifying Higher Notes",
+        "content": """
+        <p>If you are <span class='bold'>hearing</span> the target note, try to determine if it is <span class='bold'>higher or lower</span> in pitch relative to the reference pitch.</p>
+        <p>If it is higher, try to <span class='bold'>identify</span> the notes that are higher than your reference note (before you reach the octave). For now, just focus on the white keys.</p>
+        <p>Example: say the reference note is E and the target note (A) sounded higher. What notes would you focus on? <span class='bold'>F, G, A, B, C, and D</span>.</p>
+        <p>Try <span class='bold'>singing/humming</span> the reference note by playing the audio and tuning yourself, and then sing/hum each of the notes in the subset above until you think the note matches the target note.</p>
+        """,
+        "keyboard": True
+    },
+    8: {
+        "title": "Identifying Lower Notes",
+        "content": """
+        <p>If it is lower, try the same approach: <span class='bold'>identify</span> the notes that are lower than your reference note (before you reach the octave).</p>
+        <p>Example: say the reference note is G and the target note (C) sounds lower. What notes would you focus on? <span class='bold'>F, E, D, C, B, and A</span>.</p>
+        <p>Using the same method, try <span class='bold'>singing/humming</span> the reference note by playing the audio and tuning yourself, and then sing/hum each of the notes in the subset above until you think the note matches the target note.</p>
+        """,
+        "keyboard": True
+    },
+    9: {
+        "title": "Practicing Singing/Humming",
+        "content": """      
+        <p>After hearing the reference note, try to establish the connection between the <span class='bold'>pitch</span> and the <span class='bold'>note name</span> of the reference note. </p>
+        <p>You could try playing the note on the piano and <span class='bold'>singing/humming</span> along to the note to reinforce the pitch. It will be important to keep this in mind for the future.</p>
+        <p>For exercise, try first playing <span class='bold'>any of the white keys</span>, keeping in mind the note name, and sing/hum along with the piano until you match in pitch.</p>
+        <p>After some time, see if you can recreate the same pitch <span class='bold'>without</span> using the piano for reference.</p>
         <h3>Exercise: Target note G</h3>
         <div class="target-note mb-4">
             <button id="startTuner" class="btn btn-primary">Start Recording</button>
@@ -131,31 +160,13 @@ LESSONS = {
         """,
         "keyboard": True
     },
-    6: {
-        "title": "Identifying Higher Notes",
+    10: {
+        "title": "More Tips on Recreating Notes",
         "content": """
-        <p>If you are hearing the guess note, try to determine if it is higher or lower in pitch relative to the reference pitch.</p>
-        <p>If it is higher, try to identify the notes that are higher than your reference note (before you reach the octave). For now, just focus on the white keys.</p>
-        <p>Example: say the reference note is E and the guess note (A) sounded higher. What notes would you focus on? F, G, A, B, C, and D.</p>
-        <p>Try humming the reference note by playing the audio and tuning yourself, and then hum each of the notes in the subset above until you think the note matches the guess note.</p>
-        """,
-        "keyboard": True
-    },
-    7: {
-        "title": "Identifying Lower Notes",
-        "content": """
-        <p>If it is lower, try the same approach: identify the notes that are lower than your reference note (before you reach the octave).</p>
-        <p>Example: say the reference note is G and the guess note (C) sounds lower. What notes would you focus on? F, E, D, C, B, and A.</p>
-        <p>Using the same method, try humming the reference note by playing the audio and tuning yourself, and then hum each of the notes in the subset above until you think the note matches the guess note.</p>
-        """,
-        "keyboard": True
-    },
-    8: {
-        "title": "Recreating Notes (Singing)",
-        "content": """
-        <p>If you are recreating the guess note, it is up to you whether you want to go higher or lower.</p>
-        <p>Based on your decision, try to think of the notes in between your reference note and the guess note.</p>
-        <p>Starting from the reference note, try humming in the direction of the guess note (either going higher or lower) until you think you have matched the pitch of the guess note. Use the piano for guidance when first starting.</p>
+        <p>If you are recreating the target note, it is <span class='bold'>up to you</span> whether you want to go higher or lower.</p>
+        <p><span class='bold'>Strategy:</span> starting from the reference note, try singing/humming in the direction of the target note (either going higher or lower) until you think you have <span class='bold'>matched the pitch</span> of the target note. Use the piano for guidance when first starting.</p>
+        <p>Another strategy is to figure out the <span class='bold'>number of whole/half steps</span> between your reference note and target note, and adjust your pitch accordingly starting from the reference note.</p>
+
         <div class="target-note mb-4">
             <button id="startTuner" class="btn btn-primary">Start Recording</button>
             <div id="tunerDisplay" class="mt-3">

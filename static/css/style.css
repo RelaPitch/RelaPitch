@@ -349,12 +349,16 @@ body {
 }
 
 /* Progress width for each lesson */
-.progress-lesson-1 { width: 16.67%; }
-.progress-lesson-2 { width: 33.33%; }
-.progress-lesson-3 { width: 50%; }
-.progress-lesson-4 { width: 66.67%; }
-.progress-lesson-5 { width: 83.33%; }
-.progress-lesson-6 { width: 100%; }
+.progress-lesson-1 { width: 10%; }
+.progress-lesson-2 { width: 20%; }
+.progress-lesson-3 { width: 30%; }
+.progress-lesson-4 { width: 40%; }
+.progress-lesson-5 { width: 50%; }
+.progress-lesson-6 { width: 60%; }
+.progress-lesson-7 { width: 70%; }
+.progress-lesson-8 { width: 80%; }
+.progress-lesson-9 { width: 90%; }
+.progress-lesson-10 { width: 100%; }
 
 .lesson-content {
     margin: 2rem 0;
@@ -850,11 +854,23 @@ footer {
 .halfstep-item {
     display: flex;
     align-items: center;
+    margin-bottom: 1rem;
 }
 
 .halfstep-item button {
     margin-left: 15px;
-    margin-bottom: 1rem;
+}
+
+.halfstep-examples {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+}
+
+.halfstep-examples .halfstep-item {
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .hidden {
@@ -886,3 +902,5 @@ footer {
 .search-form button:hover {
     background-color: #0056b3;
 }
+
+/* Step Counter Exercise Styles - REMOVE THESE */
