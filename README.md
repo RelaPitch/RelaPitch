@@ -32,31 +32,12 @@ RelaPitch is a web application designed to help users learn and practice relativ
     ```
 
 4.  **Run the Flask application:**
-    The `server.py` file is configured to run with `flask run`.
-    ```bash
-    # Ensure your FLASK_APP environment variable is set (it might be by default with server.py)
-    # export FLASK_APP=server.py  # On macOS/Linux (if needed)
-    # set FLASK_APP=server.py    # On Windows (if needed)
-    
-    # To run in development mode (enables debugging and auto-reloading):
-    export FLASK_ENV=development # On macOS/Linux
-    # set FLASK_ENV=development   # On Windows
-    
-    flask run
     ```
-    You should see output similar to:
-    ```
-     * Serving Flask app 'server.py' (lazy loading)
-     * Environment: development
-     * Debug mode: on
-     * Running on [http://127.0.0.1](http://127.0.0.1):5000 (Press CTRL+C to quit)
-     * Restarting with stat
-     * Debugger is active!
-     * Debugger PIN: xxx-xxx-xxx
+    python server.py
     ```
 
 5.  **Open your web browser and navigate to:**
-    [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+    [http://127.0.0.1:5001/](http://127.0.0.1:5001/)
 
 ## Project Structure
 
